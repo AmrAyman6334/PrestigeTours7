@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>حجز الفنادق - Prestige Tours</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+:root{
+  --blue:#1f6feb;
+  --gold:#f4c542;
+  --dark:#06111f;
+  --card:#0f2138;
+  --text:#fff;
+  --muted:#aaa;
+  --line:rgba(255,255,255,.08);
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Cairo', sans-serif;
+}
+
+body{
+  background: linear-gradient(180deg,#06111f,#081525,#050b14);
+  color: var(--text);
+  overflow-x: hidden;
+}
+
+/* HEADER */
+header{
+  position: fixed;
+  top:0;
+  width:100%;
+  z-index:999;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:14px 20px;
+  background: rgba(0,0,0,.6);
+  backdrop-filter: blur(14px);
+  transition:0.4s;
+}
+header.hide{
+  transform: translateY(-100%);
+}
+
+/* LOGO */
+.logo{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-weight:900;
+  font-size:18px;
+  color: var(--gold);
+  cursor:pointer;
+  text-decoration: none;
+}
+.logo i{color: var(--blue);}
+
+/* PAGE TITLE */
+.page-title{
+  margin-top:90px;
+  text-align:center;
+  font-size:32px;
+  font-weight:700;
+  margin-bottom:40px;
+  color: var(--gold);
+}
+
+/* HOTELS GRID */
+.hotels-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:24px;
+  max-width:1160px;
+  margin:auto;
+  padding:0 20px 60px;
+}
+
+/* HOTEL CARD */
+.hotel-card{
+  background: var(--card);
+  border-radius:20px;
+  overflow:hidden;
+  box-shadow:0 20px 50px rgba(0,0,0,.5);
+  transition:.3s;
+  cursor:pointer;
+}
+.hotel-card:hover{
+  transform:translateY(-6px);
+}
+.hotel-card img{
+  width:100%;
+  height:180px;
+  object-fit:cover;
+}
+.hotel-content{
+  padding:18px;
+}
+.hotel-content h3{
+  font-size:20px;
+  margin-bottom:8px;
+}
+.stars{
+  color: var(--gold);
+  margin-bottom:8px;
+}
+.hotel-content .price{
+  font-size:16px;
+  font-weight:700;
+  margin-bottom:14px;
+  color: var(--blue);
+}
+.hotel-details{
+  font-size:13px;
+  color:var(--muted);
+  line-height:1.8;
+  margin-bottom:10px;
+}
+.btn-book{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  padding:12px 18px;
+  border-radius:24px;
+  background: linear-gradient(45deg,var(--blue),#3b82f6);
+  color:white;
+  text-decoration:none;
+  font-weight:600;
+  transition:.3s;
+}
+.btn-book:hover{
+  transform: translateY(-3px);
+  box-shadow:0 10px 25px rgba(0,0,0,.4);
+}
+
+/* MODAL */
+.hotel-modal{
+  display:none;
+  position:fixed;
+  z-index:10000;
+  left:0; top:0;
+  width:100%; height:100%;
+  overflow:auto;
+  background: rgba(0,0,0,0.7);
+  animation:fadeIn 0.3s ease-in-out;
+}
+.hotel-modal .modal-content{
+  background: var(--card);
+  margin:80px auto;
+  padding:20px 25px;
+  border-radius:15px;
+  width:90%;
+  max-width:600px;
+  color: var(--text);
+  max-height:80vh;
+  overflow-y:auto;
+  box-shadow:0 5px 30px rgba(0,0,0,0.4);
+  position:relative;
+}
+
+/* MODAL HEADER */
+.modal-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  border-bottom:1px solid rgba(255,255,255,0.2);
+  padding-bottom:8px;
+  margin-bottom:15px;
+}
+.modal-header h3{
+  margin:0;
+}
+.modal-header .close{
+  font-size:28px;
+  font-weight:bold;
+  cursor:pointer;
+  color: var(--gold);
+}
+
+/* SECTIONS */
+.hotel-section{
+  margin-bottom:15px;
+  line-height:1.6;
+}
+
+/* ANIMATION */
+@keyframes fadeIn{
+  from{opacity:0;}
+  to{opacity:1;}
+}
+
+/* MOBILE */
+@media(max-width:600px){
+  .page-title{font-size:26px;margin-bottom:28px;}
+  .hotel-card img{height:150px;}
+}
+</style>
+</head>
+
+<body>
+
+<header id="header">
+  <a href="index.html" class="logo"><i class="fa-solid fa-hotel"></i> Prestige Tours</a>
+</header>
+
+<!-- PAGE TITLE -->
+<div class="page-title" style="text-align:center; margin-top:90px; margin-bottom:40px;">
+  <h1 style="font-size:38px; font-weight:800; color: var(--gold); text-shadow: 1px 1px 8px rgba(0,0,0,0.5);">
+    حجز الفنادق
+  </h1>
+  <p style="font-size:16px; color: var(--muted); max-width:700px; margin:auto; line-height:1.6;">
+    اضغط على زر <span style="font-weight:700; color:var(--blue);">احجز الآن</span> للحجز مباشرة،  
+    أو لمشاهدة تفاصيل أكثر، اضغط على كارت أو صورة الفندق.
+  </p>
+</div>
+
+<div class="hotels-grid">
+
+<!-- HOTEL 6 CARD -->
+<div class="hotel-card" onclick="openModal('modal6')">
+  <img src="images2/hotel1.jpg" alt="الباشا ريزورت اكوا بارك الغردقة">
+  <div class="hotel-content">
+
+    <h3>الباشا ريزورت اكوا بارك الغردقة</h3>
+
+    <div class="stars">
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+    </div>
+
+    <div class="price">السعر: 2860 جنيه/ليلة</div>
+
+    <div class="hotel-details short">
+      فندق 4 نجوم، يقع في شارع شيراتون بالغردقة، على البحر مباشرة، يضم أكوا بارك، حمامات سباحة، غرف فاميلي وجاردن/بول/سي فيو.
+      وسط البلد, الغردقة, مصر
+    </div>
+
+    <a href="https://wa.me/201556680355" target="_blank" class="btn-book" onclick="event.stopPropagation()">
+      <i class="fa-solid fa-ticket"></i> احجز الآن
+    </a>
+
+  </div>
+</div>
+
+<!-- HOTEL 6 MODAL -->
+<div id="modal6" class="hotel-modal">
+  <div class="modal-content">
+
+    <div class="modal-header">
+      <h3>الباشا ريزورت اكوا بارك الغردقة</h3>
+      <span class="close" onclick="closeModal('modal6')">&times;</span>
+    </div>
+
+    <div class="stars">
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+    </div>
+
+    <div class="price">السعر: 2860 جنيه/ليلة</div>
+
+    <div class="hotel-section">
+      <b>📍 الموقع:</b><br>
+      وسط البلد، الغردقة، مصر
+    </div>
+
+    <div class="hotel-section">
+      <b>⭐ المميزات:</b><br>
+      ✔ صف أول على البحر<br>
+      ✔ شاطئ رملي مميز<br>
+      ✔ أكوا بارك للكبار والأطفال<br>
+      ✔ حمامات سباحة 3 منها مدفأة شتاءً<br>
+      ✔ منطقة ألعاب أطفال + كيدز كلوب<br>
+      ✔ غرف فاميلي وجاردن، بول فيو، سي سايد أو سي فيو<br>
+      ✔ مطعم رئيسي + مطعم صيني وإيطالي (تكلفة إضافية)<br>
+      ✔ 3 بارات (حمام السباحة، الشاطئ، الريسيبشن)<br>
+      ✔ واي فاي مجاني في الريسيبشن<br>
+      ✔ نشاطات وأنيميشن يومي
+    </div>
+
+    <div class="hotel-section">
+      <b>📄 وصف الفندق:</b><br>
+      الباشا ريزورت الغردقة فندق 4 نجوم يقع في شارع شيراتون، يتميز بأجواء حيوية، مطاعم وكافيهات، تسوق، غرف ستاندرد وفاميلي، حمامات سباحة وأكوا بارك، كيدز أريا، أنشطة ترفيهية وفريق أنيميشن. نسبة إشغال أجنبي عالية.
+    </div>
+
+    <div class="hotel-section">
+      <b>👶 سياسة الأطفال:</b><br>
+      - الطفل الأول: تحت 12 سنة مجاناً<br>
+      - الطفل الثاني: تحت 6 سنوات مجاناً<br>
+      - الطفل الثاني: من 6 إلى 12 سنة 50% من سعر الفرد
+    </div>
+
+    <div class="hotel-section">
+      <b>💰 أسعار الفترات المتاحة:</b><br>
+      <u>04-03 إلى 17-03</u><br>
+      مزدوجة: 8585 جنيه<br>
+      فردية: 12880 جنيه<br>
+      ثلاثية: 8505 جنيه<br><br>
+
+      <u>18-03 إلى 25-03</u><br>
+      مزدوجة: 9540 جنيه<br>
+      فردية: 12880 جنيه<br>
+      ثلاثية: 8505 جنيه<br><br>
+
+      <u>26-03 إلى 30-04</u><br>
+      مزدوجة: 8585 جنيه<br>
+      فردية: 12880 جنيه<br>
+      ثلاثية: 8505 جنيه<br><br>
+
+      <u>01-05 إلى 25-06</u><br>
+      مزدوجة: 9540 جنيه<br>
+      فردية: 14310 جنيه<br>
+      ثلاثية: 9565 جنيه
+    </div>
+
+    <a href="https://wa.me/201556680355" target="_blank" class="btn-book">
+      <i class="fa-solid fa-ticket"></i> احجز الآن
+    </a>
+
+  </div>
+</div>
+  <!-- باقي الفنادق -->
+
+<!-- HOTEL 7 CARD -->
+<div class="hotel-card" onclick="openModal('modal7')">
+  <img src="images2/hotel2.jpg" alt="امباير بيتش اكوا بارك الغردقة">
+  <div class="hotel-content">
+
+    <h3>امباير بيتش اكوا بارك الغردقة</h3>
+
+    <div class="stars">
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+    </div>
+
+    <div class="price">السعر: 1840 جنيه/ليلة</div>
+
+    <div class="hotel-details short">
+      فندق 4 نجوم على البحر مباشرة في الدهار بالغردقة، يضم أكوا بارك، حمامات سباحة مدفأة، غرف واسعة ومناسبة للعائلات.
+      الدهار, الغردقة, مصر
+    </div>
+
+    <a href="https://wa.me/201556680355" target="_blank" class="btn-book" onclick="event.stopPropagation()">
+      <i class="fa-solid fa-ticket"></i> احجز الآن
+    </a>
+
+  </div>
+</div>
+
+<!-- HOTEL 7 MODAL -->
+<div id="modal7" class="hotel-modal">
+  <div class="modal-content">
+
+    <div class="modal-header">
+      <h3>امباير بيتش اكوا بارك الغردقة</h3>
+      <span class="close" onclick="closeModal('modal7')">&times;</span>
+    </div>
+
+    <div class="stars">
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+    </div>
+
+    <div class="price">السعر: 1840 جنيه/ليلة</div>
+
+    <div class="hotel-section">
+      <b>📍 الموقع:</b><br>
+      الدهار، الغردقة، مصر
+    </div>
+
+    <div class="hotel-section">
+      <b>⭐ المميزات:</b><br>
+      ✔ صف أول على البحر<br>
+      ✔ شاطئ رملي مميز<br>
+      ✔ أكوا بارك للكبار والأطفال<br>
+      ✔ حمامات سباحة متعددة، حمام سباحة مدفأ شتاءً<br>
+      ✔ غرف واسعة ومكيفة، غرف كونيكتيد للعائلات<br>
+      ✔ مطعم رئيسي indoor/outdoor + بار على الشاطئ<br>
+      ✔ كيدز اريا وفريق أنيميشن<br>
+      ✔ فيوهات مميزة للغرف (بحمام السباحة أو البحر)<br>
+      ✔ مستوى خدمة جيد ونسبة إشغال أجنبي عالية
+    </div>
+
+    <div class="hotel-section">
+      <b>👶 سياسة الأطفال:</b><br>
+      - الطفل الأول: تحت 12 سنة مجاناً<br>
+      - الطفل الثاني: تحت 6 سنوات مجاناً<br>
+      - الطفل الثاني: من 6 إلى 12 سنة 50% من سعر الفرد
+    </div>
+
+    <div class="hotel-section">
+      <b>💰 أسعار الفترات المتاحة:</b><br>
+      <u>24-02 إلى 18-03</u><br>
+      مزدوجة: 5515 جنيه<br>
+      فردية: 8270 جنيه<br>
+      ثلاثية: 5430 جنيه<br><br>
+
+      <u>19-03 إلى 25-03</u><br>
+      مزدوجة: 5645 جنيه<br>
+      فردية: 8464 جنيه<br>
+      ثلاثية: 5560 جنيه<br><br>
+
+      <u>26-03 إلى 09-04</u><br>
+      مزدوجة: 5515 جنيه<br>
+      فردية: 8270 جنيه<br>
+      ثلاثية: 5430 جنيه<br><br>
+
+      <u>10-04 إلى 13-04</u><br>
+      مزدوجة: 6450 جنيه<br>
+      فردية: 9675 جنيه<br>
+      ثلاثية: 6375 جنيه<br><br>
+
+      <u>14-04 إلى 30-04</u><br>
+      مزدوجة: 5805 جنيه<br>
+      فردية: 8710 جنيه<br>
+      ثلاثية: 5725 جنيه
+    </div>
+
+    <a href="https://wa.me/201556680355" target="_blank" class="btn-book">
+      <i class="fa-solid fa-ticket"></i> احجز الآن
+    </a>
+
+  </div>
+</div>
+  
+<!-- HOTEL 8 CARD -->
+<div class="hotel-card" onclick="openModal('modal8')">
+  <img src="images2/hotel3.jpg" alt="الباتروس أكوا بارك الغردقة">
+  <div class="hotel-content">
+
+    <h3>الباتروس أكوا بارك الغردقة</h3>
+
+    <div class="stars">
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+    </div>
+
+    <div class="price">السعر: 3640 جنيه/ليلة</div>
+
+    <div class="hotel-details short">
+      فندق 4 نجوم فاخر بالغردقة مع أكوا بارك عملاقة، حمامات سباحة متنوعة، شاطئ رملي، غرف فاميلي وخدمة ممتازة.
+      طريق القرى, الغردقة, مصر
+    </div>
+
+    <a href="https://wa.me/201556680355" target="_blank" class="btn-book" onclick="event.stopPropagation()">
+      <i class="fa-solid fa-ticket"></i> احجز الآن
+    </a>
+
+  </div>
+</div>
+
+<!-- HOTEL 8 MODAL -->
+<div id="modal8" class="hotel-modal">
+  <div class="modal-content">
+
+    <div class="modal-header">
+      <h3>الباتروس أكوا بارك الغردقة</h3>
+      <span class="close" onclick="closeModal('modal8')">&times;</span>
+    </div>
+
+    <div class="stars">
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+    </div>
+
+    <div class="price">السعر: 3640 جنيه/ليلة</div>
+
+    <div class="hotel-section">
+      <b>📍 الموقع:</b><br>
+      طريق القرى، الغردقة، مصر
+    </div>
+
+    <div class="hotel-section">
+      <b>⭐ المميزات:</b><br>
+      ✔ شاطئ رملي مميز<br>
+      ✔ أكوا بارك عملاقة (25 لعبة، 9 للكبار و16 للأطفال)<br>
+      ✔ حمامات سباحة متعددة، حمام أمواج، حمام مدفأ شتاءً<br>
+      ✔ غرف فاميلي مميزة للعائلات<br>
+      ✔ 3 مطاعم متنوعة (إيطالي، آسيوي، متوسط)<br>
+      ✔ بارات متنوعة<br>
+      ✔ شاطئ فندق بيتش الباتروس مقابل الفندق مع مشروبات وسناكس مجانية + شاتل باص<br>
+      ✔ كيدز كلوب ومنطقة ألعاب أطفال<br>
+      ✔ مركز سبا وفريق أنيميشان للأنشطة النهارية والحفلات المسائية<br>
+      ✔ واي فاي مجاني في جميع أنحاء الفندق
+    </div>
+
+    <div class="hotel-section">
+      <b>👶 سياسة الأطفال:</b><br>
+      - الطفل الأول: تحت 12 سنة مجاناً<br>
+      - الطفل الثاني: تحت 4 سنوات مجاناً<br>
+      - الطفل الثاني: من 4 إلى 6 سنوات 25% من سعر الفرد<br>
+      - الطفل الثاني: من 6 إلى 12 سنة 50% من سعر الفرد
+    </div>
+
+    <div class="hotel-section">
+      <b>💰 أسعار الفترات المتاحة:</b><br>
+      <u>05-03 إلى 19-03</u><br>
+      مزدوجة: 10920 جنيه<br>
+      فردية: 17470 جنيه<br>
+      ثلاثية: 10415 جنيه<br><br>
+
+      <u>20-03 إلى 23-03</u><br>
+      مزدوجة: 16380 جنيه<br>
+      فردية: 26210 جنيه<br>
+      ثلاثية: 15625 جنيه<br><br>
+
+      <u>24-03 إلى 27-03</u><br>
+      مزدوجة: 12285 جنيه<br>
+      فردية: 19655 جنيه<br>
+      ثلاثية: 11721 جنيه<br><br>
+
+      <u>28-03 إلى 30-04</u><br>
+      مزدوجة: 14335 جنيه<br>
+      فردية: 22930 جنيه<br>
+      ثلاثية: 13670 جنيه
+    </div>
+
+    <a href="https://wa.me/201556680355" target="_blank" class="btn-book">
+      <i class="fa-solid fa-ticket"></i> احجز الآن
+    </a>
+
+  </div>
+</div>
+
+<!-- HOTEL 9 CARD -->
+<div class="hotel-card" onclick="openModal('modal9')">
+  <img src="images2/hotel4.jpg" alt="جولدن بيتش ريزورت الغردقة">
+  <div class="hotel-content">
+
+    <h3>جولدن بيتش ريزورت الغردقة</h3>
+
+    <div class="stars">
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+    </div>
+
+    <div class="price">السعر: 3445 جنيه/ليلة</div>
+
+    <div class="hotel-details short">
+      فندق 4 نجوم ديلوكس مع أكوا بارك كبيرة، شاطئ رملي، غرف فاميلي، مشروبات مجانية 24 ساعة، وأعلى مستوى من الخدمة.
+      الأحياء, الغردقة, مصر
+    </div>
+
+    <a href="https://wa.me/201556680355" target="_blank" class="btn-book" onclick="event.stopPropagation()">
+      <i class="fa-solid fa-ticket"></i> احجز الآن
+    </a>
+
+  </div>
+</div>
+
+<!-- HOTEL 9 MODAL -->
+<div id="modal9" class="hotel-modal">
+  <div class="modal-content">
+
+    <div class="modal-header">
+      <h3>جولدن بيتش ريزورت الغردقة</h3>
+      <span class="close" onclick="closeModal('modal9')">&times;</span>
+    </div>
+
+    <div class="stars">
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+    </div>
+
+    <div class="price">السعر: 3445 جنيه/ليلة</div>
+
+    <div class="hotel-section">
+      <b>📍 الموقع:</b><br>
+      الأحياء، الغردقة، مصر
+    </div>
+
+    <div class="hotel-section">
+      <b>⭐ المميزات:</b><br>
+      ✔ شاطئ رملي مباشر<br>
+      ✔ أكوا بارك كبيرة (12 لعبة، 5 للكبار و7 للأطفال)<br>
+      ✔ 5 حمامات سباحة، جميع حمامات أكوا بارك مدفأة شتاءً<br>
+      ✔ نظام الترا أول إنكلوزيف: مشروبات مجانية 24 ساعة<br>
+      ✔ 4 مطاعم مجانية + مطاعم إضافية مقابل تكلفة<br>
+      ✔ 5 بارات مختلفة<br>
+      ✔ غرف فاميلي للأسر وغرف بريميام مجددة بالكامل<br>
+      ✔ مياه، شاي، نسكافيه يومياً في جميع الغرف<br>
+      ✔ نادى أطفال ومنطقة ألعاب أطفال، تنس طاولة وبلياردو<br>
+      ✔ فريق أنيميشان للأنشطة النهارية والعروض المسائية<br>
+      ✔ باركينج سيارات مجاني، واي فاي في الأماكن العامة<br>
+      ✔ مميزات شهر العسل: سلة فاكهة، تسكين مبكر ومغادرة متأخرة حسب الإمكانية
+    </div>
+
+    <div class="hotel-section">
+      <b>👶 سياسة الأطفال:</b><br>
+      - الطفل الأول: تحت 12 سنة مجاناً<br>
+      - الطفل الثاني: تحت 6 سنوات مجاناً<br>
+      - الطفل الثاني: بين 6 إلى 12 سنة 50% من سعر الفرد
+    </div>
+
+    <div class="hotel-section">
+      <b>💰 أسعار الفترات المتاحة:</b><br>
+      <u>26-02 إلى 19-03</u><br>
+      مزدوجة: 10335 جنيه<br>
+      فردية: 16535 جنيه<br>
+      ثلاثية: 10160 جنيه<br><br>
+
+      <u>20-03 إلى 30-04</u><br>
+      مزدوجة: 11130 جنيه<br>
+      فردية: 17810 جنيه<br>
+      ثلاثية: 10965 جنيه
+    </div>
+
+    <a href="https://wa.me/201556680355" target="_blank" class="btn-book">
+      <i class="fa-solid fa-ticket"></i> احجز الآن
+    </a>
+
+  </div>
+</div>
+  
+<!-- FOOTER -->
+<footer style="text-align:center; padding:30px 20px; background:rgba(0,0,0,0.3); border-top:1px solid rgba(255,255,255,0.1);">
+  
+  <!-- حقوق الملكية -->
+  <p style="margin:0; color:var(--muted); font-size:15px; font-weight:500; letter-spacing:0.5px;">
+    &copy; 2026 Prestige Tours. جميع الحقوق محفوظة.
+  </p>
+
+</footer>
+  
+<script>
+/* TOGGLE CARD */
+function toggleCard(card){
+  card.classList.toggle("active");
+}
+
+/* OPEN/CLOSE MODAL */
+function openModal(id){
+  document.getElementById(id).style.display = "block";
+}
+function closeModal(id){
+  document.getElementById(id).style.display = "none";
+}
+
+/* CLOSE MODAL WHEN CLICK OUTSIDE */
+window.onclick = function(event){
+  const modal = document.querySelector(".hotel-modal");
+  if(event.target === modal){
+    modal.style.display = "none";
+  }
+}
+
+/* HIDE HEADER ON SCROLL */
+let lastScroll=0;
+const header=document.getElementById("header");
+
+window.addEventListener("scroll",()=>{
+  let current=window.pageYOffset;
+  if(current>lastScroll){
+    header.classList.add("hide");
+  }else{
+    header.classList.remove("hide");
+  }
+  lastScroll=current;
+});
+</script>
+
+</body>
+</html>

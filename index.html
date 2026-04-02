@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prestige Tours</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+:root{
+  --blue:#1f6feb;
+  --gold:#f4c542;
+  --dark:#06111f;
+  --card:#0f2138;
+  --text:#fff;
+  --muted:#aaa;
+  --line:rgba(255,255,255,.08);
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Cairo',sans-serif;
+}
+
+html{
+  scroll-behavior:smooth;
+}
+
+body{
+  background:
+    radial-gradient(circle at top left, rgba(31,111,235,.14), transparent 24%),
+    radial-gradient(circle at top right, rgba(244,197,66,.10), transparent 22%),
+    linear-gradient(180deg,#06111f,#081525,#050b14);
+  color:var(--text);
+  overflow-x:hidden;
+}
+
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:linear-gradient(120deg, rgba(255,255,255,.04), transparent 30%, rgba(255,255,255,.02) 55%, transparent 80%);
+  pointer-events:none;
+  z-index:-1;
+}
+
+/* LOADER */
+.loader{
+  position:fixed;
+  inset:0;
+  background:#06111f;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  z-index:99999;
+  transition:opacity .7s ease, visibility .7s ease;
+}
+.loader.hide{
+  opacity:0;
+  visibility:hidden;
+}
+.loader .plane{
+  font-size:52px;
+  color:var(--gold);
+  animation:fly 1.6s infinite ease-in-out;
+}
+.loader h2{
+  margin-top:14px;
+  font-size:22px;
+  color:var(--text);
+  letter-spacing:.5px;
+}
+.loader p{
+  margin-top:6px;
+  color:var(--muted);
+  font-size:13px;
+}
+@keyframes fly{
+  0%{transform:translateY(0) rotate(0)}
+  50%{transform:translateY(-14px) rotate(6deg)}
+  100%{transform:translateY(0) rotate(0)}
+}
+
+/* HEADER */
+header{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  z-index:9999;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:14px 20px;
+  background:rgba(0,0,0,.62);
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line);
+  transition:.4s ease;
+}
+header.hide{
+  transform:translateY(-100%);
+}
+
+.logo{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-weight:900;
+  font-size:18px;
+  color:var(--gold);
+  letter-spacing:.3px;
+}
+.logo i{
+  color:var(--blue);
+  font-size:18px;
+}
+
+.menu-btn{
+  width:42px;
+  height:42px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:12px;
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.05);
+  cursor:pointer;
+  transition:.3s;
+}
+.menu-btn:hover{
+  background:var(--blue);
+  transform:scale(1.05);
+}
+
+/* OVERLAY */
+.overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.58);
+  opacity:0;
+  visibility:hidden;
+  transition:.35s ease;
+  z-index:9998;
+}
+.overlay.active{
+  opacity:1;
+  visibility:visible;
+}
+
+/* SIDEBAR */
+.sidebar{
+  position:fixed;
+  top:0;
+  right:-300px;
+  width:280px;
+  height:100%;
+  background:rgba(11,26,47,.98);
+  backdrop-filter:blur(18px);
+  padding:24px 18px;
+  transition:.5s ease;
+  z-index:10000;
+  box-shadow:-20px 0 60px rgba(0,0,0,.78);
+  display:flex;
+  flex-direction:column;
+}
+.sidebar.active{
+  right:0;
+}
+.close-btn{
+  font-size:22px;
+  color:#fff;
+  cursor:pointer;
+  margin-bottom:24px;
+  display:block;
+  text-align:left;
+  transition:.25s;
+}
+.close-btn:hover{
+  color:var(--blue);
+  transform:rotate(90deg);
+}
+.sidebar a{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:14px;
+  margin-bottom:12px;
+  border-radius:14px;
+  background:rgba(255,255,255,.05);
+  color:white;
+  text-decoration:none;
+  transition:.3s;
+  border:1px solid rgba(255,255,255,.04);
+}
+.sidebar a i{
+  color:var(--gold);
+}
+.sidebar a:hover{
+  background:linear-gradient(45deg,var(--blue),#3b82f6);
+  transform:translateX(-5px);
+}
+.sidebar-footer{
+  margin-top:auto;
+  font-size:12px;
+  color:var(--muted);
+  text-align:center;
+  opacity:.75;
+}
+
+/* HERO */
+.hero{
+  padding-top:120px;
+  padding-bottom:62px;
+  text-align:center;
+  max-width:980px;
+  margin:auto;
+  position:relative;
+}
+.hero::before{
+  content:"✈";
+  position:absolute;
+  top:34px;
+  left:50%;
+  transform:translateX(-50%);
+  font-size:64px;
+  opacity:.08;
+  animation:flyHero 6s infinite linear;
+}
+@keyframes flyHero{
+  0%{transform:translate(-50%,0)}
+  50%{transform:translate(-30%,10px)}
+  100%{transform:translate(-50%,0)}
+}
+.hero h1{
+  font-size:44px;
+  line-height:1.25;
+  letter-spacing:.3px;
+  margin-bottom:14px;
+}
+.hero span{
+  color:var(--gold);
+  text-shadow:0 0 12px rgba(244,197,66,.25);
+}
+.hero p{
+  margin-top:10px;
+  color:var(--muted);
+  line-height:2;
+  font-size:16px;
+  max-width:760px;
+  margin-inline:auto;
+}
+
+.btn{
+  margin-top:26px;
+  display:inline-flex;
+  gap:10px;
+  align-items:center;
+  padding:14px 26px;
+  border-radius:30px;
+  background:linear-gradient(45deg,var(--blue),#3b82f6);
+  color:white;
+  text-decoration:none;
+  transition:.3s;
+  font-weight:700;
+  box-shadow:0 10px 24px rgba(31,111,235,.25);
+}
+.btn:hover{
+  transform:translateY(-3px) scale(1.03);
+  box-shadow:0 14px 32px rgba(0,0,0,.45);
+}
+
+/* HERO VIDEO */
+.hero-video{
+  margin:40px auto 30px;
+  max-width:850px;
+  border-radius:24px;
+  overflow:hidden;
+  position:relative;
+  box-shadow:
+    0 15px 40px rgba(0,0,0,0.3),
+    0 25px 80px rgba(0,0,0,0.25),
+    0 35px 120px rgba(0,0,0,0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.hero-video:hover{
+  transform: translateY(-4px) scale(1.02);
+  box-shadow:
+    0 20px 50px rgba(0,0,0,0.4),
+    0 30px 90px rgba(0,0,0,0.35),
+    0 40px 130px rgba(0,0,0,0.3);
+}
+
+.hero-video video{
+  width:100%;
+  height:auto;
+  display:block;
+  border-radius:24px;
+  object-fit:cover;
+}
+
+/* Optional: Golden overlay */
+.hero-video::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(to top, rgba(244,197,66,0.15), transparent 60%);
+  pointer-events:none;
+}
+
+/* SECTIONS */
+.section{
+  padding:70px 20px;
+  max-width:1160px;
+  margin:auto;
+}
+.title{
+  text-align:center;
+  font-size:30px;
+  margin-bottom:28px;
+  letter-spacing:.2px;
+}
+
+/* DESTINATIONS */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+  gap:20px;
+}
+.card{
+  background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+  border:1px solid var(--line);
+  border-radius:20px;
+  overflow:hidden;
+  text-decoration:none;
+  color:white;
+  transition:.35s ease;
+  box-shadow:0 18px 50px rgba(0,0,0,.16);
+}
+.card img{
+  width:100%;
+  height:165px;
+  object-fit:cover;
+  display:block;
+}
+.card-content{
+  padding:18px;
+}
+.card h3{
+  font-size:18px;
+  margin-bottom:7px;
+}
+.card p{
+  font-size:13px;
+  color:var(--muted);
+  line-height:1.7;
+}
+.card:hover{
+  transform:translateY(-10px) scale(1.02);
+  box-shadow:0 25px 60px rgba(0,0,0,.75);
+  border-color:rgba(31,111,235,.28);
+}
+
+/* ABOUT */
+.about-box,
+.contact-box{
+  max-width:920px;
+  margin:20px auto; /* مسافة بين الأقسام */
+  background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+  border:1px solid var(--line);
+  border-radius:24px;
+  padding:28px 24px;
+  color:var(--muted);
+  line-height:2;
+  text-align:center;
+  box-shadow:0 18px 50px rgba(0,0,0,.16);
+}
+
+/* CONTACT */
+.social{
+  display:flex;
+  justify-content:center;
+  gap:15px;
+  flex-wrap:wrap;
+  margin-top:8px;
+}
+.social a{
+  background:#111;
+  padding:12px 20px;
+  border-radius:30px;
+  color:white;
+  text-decoration:none;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  transition:.3s;
+  border:1px solid rgba(255,255,255,.05);
+}
+.social a:hover{
+  background:var(--blue);
+  transform:translateY(-3px);
+}
+  
+/* FOOTER */
+.footer{
+  text-align:center;
+  padding:30px 20px 38px;
+  color:#888;
+  font-size:13px;
+}
+
+/* REVEAL */
+.reveal{
+  opacity:0;
+  transform:translateY(30px);
+  transition:1s ease;
+}
+.reveal.active{
+  opacity:1;
+  transform:translateY(0);
+}
+
+/* MOBILE */
+@media(max-width:700px){
+  .hero{
+    padding-top:150px;
+  }
+  .hero h1{
+    font-size:30px;
+  }
+  .hero p{
+    font-size:14px;
+  }
+  .title{
+    font-size:26px;
+  }
+  .sidebar{
+    width:270px;
+  }
+
+  /* لجعل الأقسام About + Contact منفصلة عموديًا */
+  .about-box, .contact-box{
+    margin-bottom:30px;
+  }
+}
+</style>
+</head>
+<body>
+  
+<!-- LOADER -->
+<div class="loader" id="loader">
+  <i class="fa-solid fa-plane plane"></i>
+  <h2>Prestige Tours</h2>
+  <p>Loading your journey...</p>
+</div>
+
+<!-- HEADER -->
+<header id="header">
+  <div class="logo">
+    <i class="fa-solid fa-plane-departure"></i>
+    Prestige Tours
+  </div>
+
+  <div class="menu-btn" onclick="openMenu()">
+    <i class="fas fa-bars"></i>
+  </div>
+</header>
+
+<!-- OVERLAY -->
+<div class="overlay" id="overlay" onclick="closeMenu()"></div>
+
+<!-- SIDEBAR -->
+<div class="sidebar" id="sidebar">
+  <span class="close-btn" onclick="closeMenu()">
+    <i class="fas fa-xmark"></i>
+  </span>
+
+  <a href="#home"><i class="fas fa-house"></i> الرئيسية</a>
+  <a href="#dest"><i class="fas fa-map-location-dot"></i> الوجهات</a>
+  <a href="#about"><i class="fas fa-building"></i> عن الشركة</a>
+  <a href="#contact"><i class="fas fa-headset"></i> تواصل</a>
+
+  <div class="sidebar-footer">Prestige Tours © 2026</div>
+</div>
+
+<!-- HERO -->
+<section class="hero reveal" id="home" style="text-align:center; padding:160px 20px 60px 20px; background: linear-gradient(135deg, #06111f, #081525); color: var(--text);">
+  
+  <!-- العنوان الكبير -->
+  <h1 style="font-size:48px; font-weight:900; line-height:1.2; margin-bottom:20px; background: linear-gradient(90deg, #1f6feb, #f4c542); -webkit-background-clip: text; color: transparent;">
+    رحلتك تبدأ مع <span>Prestige Tours</span>
+  </h1>
+
+  <!-- الوصف الأنيق -->
+  <p style="font-size:18px; max-width:750px; margin:auto; color: var(--muted); line-height:1.6;">
+    شركة متخصصة في السياحة والسفر، حجوزات فنادق، رحلات سياحية،  
+    ومتابعة مباشرة لضمان أفضل تجربة سفر لك ولعائلتك.
+  </p>
+
+  
+  <!-- VIDEO -->
+  <div class="hero-video">
+    <video autoplay loop muted playsinline>
+      <source src="hero-video.mp4" type="video/mp4">
+      متصفحك لا يدعم الفيديو.
+    </video>
+  </div>
+
+  <a href="#dest" class="btn">
+    <i class="fas fa-location-dot"></i>
+    استكشف الوجهات
+  </a>
+</section>
+  
+  
+<!-- DESTINATIONS -->
+<section class="section reveal" id="dest">
+  <div class="title">الوجهات</div>
+
+  <div class="grid">
+    <a href="Page1.html" class="card">
+      <img src="images/Page1.png" alt="شرم الشيخ">
+      <div class="card-content">
+        <h3>فنادق شرم الشيخ</h3>
+        <p>أفضل الرحلات البحرية</p>
+      </div>
+    </a>
+
+    <a href="Page2.html" class="card">
+      <img src="images/Page2.png" alt="الغردقة">
+      <div class="card-content">
+        <h3>فنادق الغردقة</h3>
+        <p>منتجعات فاخرة</p>
+      </div>
+    </a>
+
+    <a href="Page3.html" class="card">
+      <img src="images/Page3.png" alt="الأقصر">
+      <div class="card-content">
+        <h3>فنادق العين السخنة</h3>
+        <p>أماكن أثرية</p>
+      </div>
+    </a>
+
+    <a href="Page4.html" class="card">
+      <img src="images/Page4.png" alt="أسوان">
+      <div class="card-content">
+        <h3>فنادق مرسى علم</h3>
+        <p>طبيعة هادئة</p>
+      </div>
+    </a>
+  </div>
+</section>
+
+<!-- ABOUT COMPANY -->
+<section class="section reveal" id="about">
+  <div class="title">عن الشركة</div>
+  <div class="about-box" style="line-height:1.8; font-size:16px; max-width:700px; margin:auto; text-align:center; padding:20px; border-radius:20px; background:rgba(255,255,255,0.03); box-shadow:0 12px 30px rgba(0,0,0,0.12);">
+    
+    <p style="margin-bottom:20px; font-weight:500; font-size:17px;">
+      نقدم خدمات سياحية متكاملة تشمل:
+    </p>
+
+    <div style="display:flex; flex-direction:column; gap:24px; align-items:center;">
+      
+      <div style="display:flex; flex-direction:column; align-items:center; color:var(--text); font-weight:500;">
+        تنظيم الرحلات السياحية الداخلية والخارجية
+        <i class="fas fa-plane-departure" style="color:var(--blue); font-size:24px; margin-top:6px;"></i>
+      </div>
+      
+      <div style="display:flex; flex-direction:column; align-items:center; color:var(--text); font-weight:500;">
+        حجوزات الفنادق بأفضل الأسعار وجودة عالية
+        <i class="fas fa-hotel" style="color:var(--gold); font-size:24px; margin-top:6px;"></i>
+      </div>
+      
+      <div style="display:flex; flex-direction:column; align-items:center; color:var(--text); font-weight:500;">
+        تقديم استشارات سياحية شخصية لكل عميل
+        <i class="fas fa-user-tie" style="color:var(--blue); font-size:24px; margin-top:6px;"></i>
+      </div>
+      
+      <div style="display:flex; flex-direction:column; align-items:center; color:var(--text); font-weight:500;">
+        متابعة مباشرة لضمان تجربة سفر سلسة وممتعة
+        <i class="fas fa-headset" style="color:var(--gold); font-size:24px; margin-top:6px;"></i>
+      </div>
+      
+    </div>
+
+  </div>
+</section>
+  
+<!-- CONTACT -->
+<section class="section reveal" id="contact">
+  <div class="title">تواصل معنا</div>
+  
+  <div class="contact-box" style="line-height:2; font-size:16px; max-width:700px; margin:auto; padding:30px 20px; border-radius:15px; background:rgba(255,255,255,0.03); box-shadow:0 10px 25px rgba(0,0,0,0.1); text-align:center;">
+    <p>للتواصل معنا عبر وسائل التواصل أو البريد الإلكتروني:</p>
+    
+    <div class="social-grid" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:30px; margin-top:30px; justify-items:center; align-items:center;">
+      
+      <!-- فيسبوك -->
+      <a href="https://www.facebook.com/share/18CqUs8Mf1/?mibextid=wwXIfr" target="_blank" style="text-decoration:none; color:var(--blue); display:flex; flex-direction:column; align-items:center; gap:8px; font-weight:600; transition:0.3s;">
+        <i class="fab fa-facebook-f" style="font-size:36px;"></i>
+        فيسبوك
+      </a>
+      
+      <!-- إنستجرام -->
+      <a href="https://www.instagram.com/prestigetours2020?igsh=MTY4c2Z1ZGl3OGozYQ==" target="_blank" style="text-decoration:none; color:var(--blue); display:flex; flex-direction:column; align-items:center; gap:8px; font-weight:600; transition:0.3s;">
+        <i class="fab fa-instagram" style="font-size:36px;"></i>
+        إنستجرام
+      </a>
+      
+      <!-- واتساب -->
+      <a href="https://wa.me/201556680355" target="_blank" style="text-decoration:none; color:var(--blue); display:flex; flex-direction:column; align-items:center; gap:8px; font-weight:600; transition:0.3s;">
+        <i class="fab fa-whatsapp" style="font-size:36px;"></i>
+        واتساب
+      </a>
+      
+      <!-- بريد إلكتروني -->
+      <a href="mailto:prestigetravel20@gmail.com" target="_blank" style="text-decoration:none; color:var(--blue); display:flex; flex-direction:column; align-items:center; gap:8px; font-weight:600; transition:0.3s;">
+        <i class="fas fa-envelope" style="font-size:36px;"></i>
+        email
+      </a>
+      
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<div class="footer" style="text-align:center; padding:30px 20px; color:#ccc; font-size:14px; line-height:1.6;">
+  <p>
+    © 2026 Prestige Tours | Developed by 
+    <a href="https://website7-sandy.vercel.app/" target="_blank" style="color:var(--blue); text-decoration:underline;">Amr Ayman</a> | Company: Global X
+  </p>
+</div>
+  
+<script>
+function openMenu(){
+  document.getElementById("sidebar").classList.add("active");
+  document.getElementById("overlay").classList.add("active");
+}
+function closeMenu(){
+  document.getElementById("sidebar").classList.remove("active");
+  document.getElementById("overlay").classList.remove("active");
+}
+
+/* LOADER */
+window.addEventListener("load", () => {
+  setTimeout(() => {
+    document.getElementById("loader").classList.add("hide");
+  }, 1300);
+});
+
+/* HEADER HIDE */
+let lastScroll = 0;
+const header = document.getElementById("header");
+
+window.addEventListener("scroll", () => {
+  const current = window.pageYOffset;
+  if (current > lastScroll) {
+    header.classList.add("hide");
+  } else {
+    header.classList.remove("hide");
+  }
+  lastScroll = current;
+});
+
+/* REVEAL */
+const reveals = document.querySelectorAll(".reveal");
+function revealNow(){
+  reveals.forEach(el => {
+    const top = el.getBoundingClientRect().top;
+    if (top < window.innerHeight - 100) {
+      el.classList.add("active");
+    }
+  });
+}
+window.addEventListener("scroll", revealNow);
+window.addEventListener("load", revealNow);
+    
+    
+</script>
+
+</body>
+</html>

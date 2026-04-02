@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>حجز الفنادق - Prestige Tours</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+:root{
+  --blue:#1f6feb;
+  --gold:#f4c542;
+  --dark:#06111f;
+  --card:#0f2138;
+  --text:#fff;
+  --muted:#aaa;
+  --line:rgba(255,255,255,.08);
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Cairo', sans-serif;
+}
+
+body{
+  background: linear-gradient(180deg,#06111f,#081525,#050b14);
+  color: var(--text);
+  overflow-x: hidden;
+}
+
+/* HEADER */
+header{
+  position: fixed;
+  top:0;
+  width:100%;
+  z-index:999;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:14px 20px;
+  background: rgba(0,0,0,.6);
+  backdrop-filter: blur(14px);
+  transition:0.4s;
+}
+header.hide{
+  transform: translateY(-100%);
+}
+
+/* LOGO */
+.logo{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-weight:900;
+  font-size:18px;
+  color: var(--gold);
+  cursor:pointer;
+  text-decoration: none;
+}
+.logo i{color: var(--blue);}
+
+/* PAGE TITLE */
+.page-title{
+  margin-top:90px;
+  text-align:center;
+  font-size:32px;
+  font-weight:700;
+  margin-bottom:40px;
+  color: var(--gold);
+}
+
+/* HOTELS GRID */
+.hotels-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:24px;
+  max-width:1160px;
+  margin:auto;
+  padding:0 20px 60px;
+}
+
+/* HOTEL CARD */
+.hotel-card{
+  background: var(--card);
+  border-radius:20px;
+  overflow:hidden;
+  box-shadow:0 20px 50px rgba(0,0,0,.5);
+  transition:.3s;
+  cursor:pointer;
+}
+.hotel-card:hover{
+  transform:translateY(-6px);
+}
+.hotel-card img{
+  width:100%;
+  height:180px;
+  object-fit:cover;
+}
+.hotel-content{
+  padding:18px;
+}
+.hotel-content h3{
+  font-size:20px;
+  margin-bottom:8px;
+}
+.stars{
+  color: var(--gold);
+  margin-bottom:8px;
+}
+.hotel-content .price{
+  font-size:16px;
+  font-weight:700;
+  margin-bottom:14px;
+  color: var(--blue);
+}
+.hotel-details{
+  font-size:13px;
+  color:var(--muted);
+  line-height:1.8;
+  margin-bottom:10px;
+}
+.btn-book{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  padding:12px 18px;
+  border-radius:24px;
+  background: linear-gradient(45deg,var(--blue),#3b82f6);
+  color:white;
+  text-decoration:none;
+  font-weight:600;
+  transition:.3s;
+}
+.btn-book:hover{
+  transform: translateY(-3px);
+  box-shadow:0 10px 25px rgba(0,0,0,.4);
+}
+
+/* MODAL */
+.hotel-modal{
+  display:none;
+  position:fixed;
+  z-index:10000;
+  left:0; top:0;
+  width:100%; height:100%;
+  overflow:auto;
+  background: rgba(0,0,0,0.7);
+  animation:fadeIn 0.3s ease-in-out;
+}
+.hotel-modal .modal-content{
+  background: var(--card);
+  margin:80px auto;
+  padding:20px 25px;
+  border-radius:15px;
+  width:90%;
+  max-width:600px;
+  color: var(--text);
+  max-height:80vh;
+  overflow-y:auto;
+  box-shadow:0 5px 30px rgba(0,0,0,0.4);
+  position:relative;
+}
+
+/* MODAL HEADER */
+.modal-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  border-bottom:1px solid rgba(255,255,255,0.2);
+  padding-bottom:8px;
+  margin-bottom:15px;
+}
+.modal-header h3{
+  margin:0;
+}
+.modal-header .close{
+  font-size:28px;
+  font-weight:bold;
+  cursor:pointer;
+  color: var(--gold);
+}
+
+/* SECTIONS */
+.hotel-section{
+  margin-bottom:15px;
+  line-height:1.6;
+}
+
+/* ANIMATION */
+@keyframes fadeIn{
+  from{opacity:0;}
+  to{opacity:1;}
+}
+
+/* MOBILE */
+@media(max-width:600px){
+  .page-title{font-size:26px;margin-bottom:28px;}
+  .hotel-card img{height:150px;}
+}
+</style>
+</head>
+
+<body>
+
+<header id="header">
+  <a href="index.html" class="logo"><i class="fa-solid fa-hotel"></i> Prestige Tours</a>
+</header>
+
+<!-- PAGE TITLE -->
+<div class="page-title" style="text-align:center; margin-top:90px; margin-bottom:40px;">
+  <h1 style="font-size:38px; font-weight:800; color: var(--gold); text-shadow: 1px 1px 8px rgba(0,0,0,0.5);">
+    حجز الفنادق
+  </h1>
+  <p style="font-size:16px; color: var(--muted); max-width:700px; margin:auto; line-height:1.6;">
+    اضغط على زر <span style="font-weight:700; color:var(--blue);">احجز الآن</span> للحجز مباشرة،  
+    أو لمشاهدة تفاصيل أكثر، اضغط على كارت أو صورة الفندق.
+  </p>
+</div>
+
+<div class="hotels-grid">
+
+<!-- HOTEL 15 CARD -->
+<div class="hotel-card" onclick="openModal('modal15')">
+  <img src="images4/hotel1.jpg" alt="الباتروس بالاس بورت غالب مرسى علم">
+  <div class="hotel-content">
+
+    <h3>الباتروس بالاس بورت غالب</h3>
+
+    <div class="stars">
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+    </div>
+
+    <div class="price">السعر: 4320 جنيه/ليلة</div>
+
+    <div class="hotel-details short">
+      فندق 5 نجوم ديلوكس على البحر مباشرة في بورت غالب، مرسى علم، مع أكوا بارك كبيرة، حمامات سباحة متعددة، غرف فاميلي وسويتات، سبا، وكيدز كلوب.
+    </div>
+
+    <a href="https://wa.me/201556680355" target="_blank" class="btn-book" onclick="event.stopPropagation()">
+      <i class="fa-solid fa-ticket"></i> احجز الآن
+    </a>
+
+  </div>
+</div>
+
+<!-- HOTEL 15 MODAL -->
+<div id="modal15" class="hotel-modal">
+  <div class="modal-content">
+
+    <div class="modal-header">
+      <h3>الباتروس بالاس بورت غالب مرسى علم</h3>
+      <span class="close" onclick="closeModal('modal15')">&times;</span>
+    </div>
+
+    <div class="stars">
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+    </div>
+
+    <div class="price">السعر: 4320 جنيه/ليلة</div>
+
+    <div class="hotel-section">
+      <b>📍 الموقع:</b><br>
+      بورت غالب، مرسى علم، مصر
+    </div>
+
+    <div class="hotel-section">
+      <b>⭐ المميزات:</b><br>
+      ✔ صف أول على البحر مع شاطئ رملي<br>
+      ✔ أكوا بارك كبيرة للكبار والأطفال<br>
+      ✔ 2 حمام سباحة للكبار والأطفال، منها داخلي مدفأ<br>
+      ✔ غرف تطل على مرسى اليخوت<br>
+      ✔ غرف فاميلي وسويتات متنوعة، غرفة شهر العسل، فيلات<br>
+      ✔ 3 مطاعم متنوعة<br>
+      ✔ سبا بـ16 منطقة للعلاج<br>
+      ✔ أنشطة رياضية: تنس، تنس طاولة، بلياردو، سهام، مينى جولف، جيم<br>
+      ✔ ملعب أطفال وغرفة ألعاب وكيدز كلوب<br>
+      ✔ واي فاي مجاني في الأماكن العامة<br>
+      ✔ فريق ترفيه يقدم أنشطة وعروض متنوعة
+    </div>
+
+    <div class="hotel-section">
+      <b>👶 سياسة الأطفال:</b><br>
+      - الطفل الأول تحت 12 سنة: مجاناً<br>
+      - الطفل الثاني من 4 سنوات: مجاناً<br>
+      - من 4 إلى 6 سنوات: 25% من سعر الفرد<br>
+      - من 6 إلى 12 سنة: 50% من سعر الفرد
+    </div>
+
+    <div class="hotel-section">
+      <b>💰 أسعار الفترات المتاحة:</b><br>
+      <u>01-03 إلى 19-03</u><br>
+      مزدوجة: 12960<br>
+      فردية: 20735<br>
+      ثلاثية: 12350<br><br>
+
+      <u>20-03 إلى 23-03</u><br>
+      مزدوجة: 17280<br>
+      فردية: 27650<br>
+      ثلاثية: 16465<br><br>
+
+      <u>24-03 إلى 30-04</u><br>
+      مزدوجة: 14400<br>
+      فردية: 23040<br>
+      ثلاثية: 13720
+    </div>
+
+    <a href="https://wa.me/201556680355" target="_blank" class="btn-book">
+      <i class="fa-solid fa-ticket"></i> احجز الآن
+    </a>
+
+  </div>
+</div>
+  <!-- باقي الفنادق -->
+<!-- HOTEL 16 CARD -->
+<div class="hotel-card" onclick="openModal('modal16')">
+  <img src="images4/hotel2.jpg" alt="الباتروس سي ورلد مرسى علم">
+  <div class="hotel-content">
+
+    <h3>الباتروس سي ورلد</h3>
+
+    <div class="stars">
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+    </div>
+
+    <div class="price">السعر: 4320 جنيه/ليلة</div>
+
+    <div class="hotel-details short">
+      فندق 5 نجوم ديلوكس على البحر مباشرة في مرسى علم، مع أكوا بارك ضخمة، 20 حمام سباحة، غرف فاميلي وجونيور سويت، سبا، وكيدز كلوب، وأنشطة ترفيهية متنوعة.
+    </div>
+
+    <a href="https://wa.me/201556680355" target="_blank" class="btn-book" onclick="event.stopPropagation()">
+      <i class="fa-solid fa-ticket"></i> احجز الآن
+    </a>
+
+  </div>
+</div>
+
+<!-- HOTEL 16 MODAL -->
+<div id="modal16" class="hotel-modal">
+  <div class="modal-content">
+
+    <div class="modal-header">
+      <h3>الباتروس سي ورلد مرسى علم</h3>
+      <span class="close" onclick="closeModal('modal16')">&times;</span>
+    </div>
+
+    <div class="stars">
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+    </div>
+
+    <div class="price">السعر: 4320 جنيه/ليلة</div>
+
+    <div class="hotel-section">
+      <b>📍 الموقع:</b><br>
+      مرسى علم، مصر
+    </div>
+
+    <div class="hotel-section">
+      <b>⭐ المميزات:</b><br>
+      ✔ صف أول على البحر مع شاطئ رملي<br>
+      ✔ أكوا بارك ضخمة للكبار والأطفال<br>
+      ✔ 20 حمام سباحة، منها 3 داخلي (واحد للأطفال و2 للكبار) ومدفأة شتاءً<br>
+      ✔ غرف فاميلي، جونيور سويت، وغرف شهر العسل<br>
+      ✔ 6 مطاعم متنوعة (إيطالي وألماني)<br>
+      ✔ سبا وجيم ومركز أنشطة ترفيهية<br>
+      ✔ تنس، تنس طاولة، بلياردو، لعبة رمي السهام، ملعب تنس<br>
+      ✔ منطقة ألعاب الأطفال ونادي للأطفال، كيدز كلوب<br>
+      ✔ واي فاي مجاني في الأماكن العامة<br>
+      ✔ فريق ترفيه يقدم أنشطة وعروض مسائية
+    </div>
+
+    <div class="hotel-section">
+      <b>👶 سياسة الأطفال:</b><br>
+      - الطفل الأول تحت 12 سنة: مجاناً<br>
+      - الطفل الثاني من 4 سنوات: مجاناً<br>
+      - من 4 إلى 6 سنوات: 25% من سعر الفرد<br>
+      - من 6 إلى 12 سنة: 50% من سعر الفرد
+    </div>
+
+    <div class="hotel-section">
+      <b>💰 أسعار الفترات المتاحة:</b><br>
+      <u>01-03 إلى 19-03</u><br>
+      مزدوجة: 12960<br>
+      فردية: 20735<br>
+      ثلاثية: 12350<br><br>
+
+      <u>20-03 إلى 23-03</u><br>
+      مزدوجة: 16560<br>
+      فردية: 26500<br>
+      ثلاثية: 15780<br><br>
+
+      <u>24-03 إلى 30-04</u><br>
+      مزدوجة: 13680<br>
+      فردية: 21888<br>
+      ثلاثية: 13034
+    </div>
+
+    <a href="https://wa.me/201556680355" target="_blank" class="btn-book">
+      <i class="fa-solid fa-ticket"></i> احجز الآن
+    </a>
+
+  </div>
+</div>
+  
+<!-- HOTEL 17 CARD -->
+<div class="hotel-card" onclick="openModal('modal17')">
+  <img src="images4/hotel3.jpg" alt="نوفوتيل مرسى علم بيتش ريزورت">
+  <div class="hotel-content">
+
+    <h3>نوفوتيل مرسى علم</h3>
+
+    <div class="stars">
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+    </div>
+
+    <div class="price">السعر: 2300 جنيه/ليلة</div>
+
+    <div class="hotel-details short">
+      فندق 5 نجوم ديلوكس على البحر مباشرة بالقرب من مدينة القصير، مع شاطئ رملي، 3 حمامات سباحة داخلية، مطاعم متنوعة، كيدز كلوب، جيم، مركز سبا، وأنشطة ترفيهية للكبار والأطفال.
+    </div>
+
+    <a href="https://wa.me/201556680355" target="_blank" class="btn-book" onclick="event.stopPropagation()">
+      <i class="fa-solid fa-ticket"></i> احجز الآن
+    </a>
+
+  </div>
+</div>
+
+<!-- HOTEL 17 MODAL -->
+<div id="modal17" class="hotel-modal">
+  <div class="modal-content">
+
+    <div class="modal-header">
+      <h3>نوفوتيل مرسى علم بيتش ريزورت</h3>
+      <span class="close" onclick="closeModal('modal17')">&times;</span>
+    </div>
+
+    <div class="stars">
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+    </div>
+
+    <div class="price">السعر: 2300 جنيه/ليلة</div>
+
+    <div class="hotel-section">
+      <b>📍 الموقع:</b><br>
+      مرسى علم، مصر
+    </div>
+
+    <div class="hotel-section">
+      <b>⭐ المميزات:</b><br>
+      ✔ صف أول على البحر مع شاطئ رملي خاص<br>
+      ✔ 3 حمامات سباحة داخلية للكبار والأطفال<br>
+      ✔ مطعم رئيسي ومطعم إيطالي وبيتزا، ويوفر طعام نباتي<br>
+      ✔ غرف واسعة ومجهزة بكاتل، مياه، شاي، نسكافيه<br>
+      ✔ منطقة ألعاب للأطفال وكيدز كلوب<br>
+      ✔ أنشطة للكبار مثل الغطس، بلياردو، كرة الطاولة، جيم، مركز سبا<br>
+      ✔ واي فاي مجاني في جميع أنحاء الفندق<br>
+      ✔ فريق الانيميشان يقدم أنشطة نهارية وعروض مسائية
+    </div>
+
+    <div class="hotel-section">
+      <b>👶 سياسة الأطفال:</b><br>
+      - الطفل الأول تحت 12 سنة: مجاناً<br>
+      - الطفل الثاني من 5 سنوات: 50% من سعر الفرد
+    </div>
+
+    <div class="hotel-section">
+      <b>💰 أسعار الفترات المتاحة:</b><br>
+      <u>01-03 إلى 18-03</u><br>
+      مزدوجة: 6900<br>
+      فردية: 11040<br>
+      ثلاثية: 6900
+    </div>
+
+    <a href="https://wa.me/201556680355" target="_blank" class="btn-book">
+      <i class="fa-solid fa-ticket"></i> احجز الآن
+    </a>
+
+  </div>
+</div>
+  
+
+<!-- HOTEL 18 CARD -->
+<div class="hotel-card" onclick="openModal('modal18')">
+  <img src="images4/hotel4.jpg" alt="أكاسيا سويس ريزورت أكوا بارك">
+  <div class="hotel-content">
+
+    <h3>أكاسيا سويس ريزورت أكوا بارك</h3>
+
+    <div class="stars">
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+    </div>
+
+    <div class="price">السعر: يبدأ من 0 جنيه/ليلة</div>
+
+    <div class="hotel-details short">
+      فندق 5 نجوم ديلوكس على البحر مباشرة شمال مرسى علم، مع شاطئ رملي وشعب مرجانية للسنوركلينج، أكوا بارك كبيرة بها 25 لعبة، حمامات سباحة متعددة، 5 مطاعم متنوعة، كيدز كلوب، جيم، سبا، وأنشطة ترفيهية للكبار والأطفال.
+    </div>
+
+    <a href="https://wa.me/201556680355" target="_blank" class="btn-book" onclick="event.stopPropagation()">
+      <i class="fa-solid fa-ticket"></i> احجز الآن
+    </a>
+
+  </div>
+</div>
+
+<!-- HOTEL 18 MODAL -->
+<div id="modal18" class="hotel-modal">
+  <div class="modal-content">
+
+    <div class="modal-header">
+      <h3>أكاسيا سويس ريزورت أكوا بارك</h3>
+      <span class="close" onclick="closeModal('modal18')">&times;</span>
+    </div>
+
+    <div class="stars">
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+    </div>
+
+    <div class="price">السعر: يبدأ من 0 جنيه/ليلة</div>
+
+    <div class="hotel-section">
+      <b>📍 الموقع:</b><br>
+      شمال مرسى علم، مصر، على بعد 26 كم من مدينة القصير
+    </div>
+
+    <div class="hotel-section">
+      <b>⭐ المميزات:</b><br>
+      ✔ صف أول على البحر وشاطئ رملي مميز<br>
+      ✔ أكوا بارك ضخمة 25 لعبة (20 للكبار و5 للأطفال)<br>
+      ✔ 5 حمامات سباحة، أوليمبي و2 حمام أمواج صناعية وليزي ريفر<br>
+      ✔ شاطئ مناسب للسنوركلينج مع إمكانية رؤية الدلافين<br>
+      ✔ 5 مطاعم متنوعة تقدم البيتزا، السي فود والطعام النباتي<br>
+      ✔ كافى تريه في جميع الغرف، جيم وسبا، أنشطة متنوعة<br>
+      ✔ منطقة ألعاب للأطفال وكيدز كلوب، مجالسة الرضع<br>
+      ✔ فريق الأنيميشان يقدم أنشطة نهارية وعروض مسائية
+    </div>
+
+    <div class="hotel-section">
+      <b>👶 سياسة الأطفال:</b><br>
+      - الطفل الأول تحت 12 سنة: مجاناً<br>
+      - الطفل الثاني تحت 6 سنوات: مجاناً<br>
+      - من 6 إلى 12 سنة: 50% من سعر الفرد
+    </div>
+
+    <div class="hotel-section">
+      <b>💰 أسعار الفترات المتاحة:</b><br>
+      <u>28-07-2025 إلى 30-09-2025</u><br>
+      مزدوجة: 0<br>
+      فردية: 0<br>
+      ثلاثية: 0
+    </div>
+
+    <a href="https://wa.me/201556680355" target="_blank" class="btn-book">
+      <i class="fa-solid fa-ticket"></i> احجز الآن
+    </a>
+
+  </div>
+</div>
+  
+<!-- FOOTER -->
+<footer style="text-align:center; padding:30px 20px; background:rgba(0,0,0,0.3); border-top:1px solid rgba(255,255,255,0.1);">
+  
+  <!-- حقوق الملكية -->
+  <p style="margin:0; color:var(--muted); font-size:15px; font-weight:500; letter-spacing:0.5px;">
+    &copy; 2026 Prestige Tours. جميع الحقوق محفوظة.
+  </p>
+
+</footer>
+  
+<script>
+/* TOGGLE CARD */
+function toggleCard(card){
+  card.classList.toggle("active");
+}
+
+/* OPEN/CLOSE MODAL */
+function openModal(id){
+  document.getElementById(id).style.display = "block";
+}
+function closeModal(id){
+  document.getElementById(id).style.display = "none";
+}
+
+/* CLOSE MODAL WHEN CLICK OUTSIDE */
+window.onclick = function(event){
+  const modal = document.querySelector(".hotel-modal");
+  if(event.target === modal){
+    modal.style.display = "none";
+  }
+}
+
+/* HIDE HEADER ON SCROLL */
+let lastScroll=0;
+const header=document.getElementById("header");
+
+window.addEventListener("scroll",()=>{
+  let current=window.pageYOffset;
+  if(current>lastScroll){
+    header.classList.add("hide");
+  }else{
+    header.classList.remove("hide");
+  }
+  lastScroll=current;
+});
+</script>
+
+</body>
+</html>

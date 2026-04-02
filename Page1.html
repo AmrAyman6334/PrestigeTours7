@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>حجز الفنادق - Prestige Tours</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+:root{
+  --blue:#1f6feb;
+  --gold:#f4c542;
+  --dark:#06111f;
+  --card:#0f2138;
+  --text:#fff;
+  --muted:#aaa;
+  --line:rgba(255,255,255,.08);
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Cairo', sans-serif;
+}
+
+body{
+  background: linear-gradient(180deg,#06111f,#081525,#050b14);
+  color: var(--text);
+  overflow-x: hidden;
+}
+
+/* HEADER */
+header{
+  position: fixed;
+  top:0;
+  width:100%;
+  z-index:999;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:14px 20px;
+  background: rgba(0,0,0,.6);
+  backdrop-filter: blur(14px);
+  transition:0.4s;
+}
+header.hide{
+  transform: translateY(-100%);
+}
+
+/* LOGO */
+.logo{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-weight:900;
+  font-size:18px;
+  color: var(--gold);
+  cursor:pointer;
+  text-decoration: none;
+}
+.logo i{color: var(--blue);}
+
+/* PAGE TITLE */
+.page-title{
+  margin-top:90px;
+  text-align:center;
+  font-size:32px;
+  font-weight:700;
+  margin-bottom:40px;
+  color: var(--gold);
+}
+
+/* HOTELS GRID */
+.hotels-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:24px;
+  max-width:1160px;
+  margin:auto;
+  padding:0 20px 60px;
+}
+
+/* HOTEL CARD */
+.hotel-card{
+  background: var(--card);
+  border-radius:20px;
+  overflow:hidden;
+  box-shadow:0 20px 50px rgba(0,0,0,.5);
+  transition:.3s;
+  cursor:pointer;
+}
+.hotel-card:hover{
+  transform:translateY(-6px);
+}
+.hotel-card img{
+  width:100%;
+  height:180px;
+  object-fit:cover;
+}
+.hotel-content{
+  padding:18px;
+}
+.hotel-content h3{
+  font-size:20px;
+  margin-bottom:8px;
+}
+.stars{
+  color: var(--gold);
+  margin-bottom:8px;
+}
+.hotel-content .price{
+  font-size:16px;
+  font-weight:700;
+  margin-bottom:14px;
+  color: var(--blue);
+}
+.hotel-details{
+  font-size:13px;
+  color:var(--muted);
+  line-height:1.8;
+  margin-bottom:10px;
+}
+.btn-book{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  padding:12px 18px;
+  border-radius:24px;
+  background: linear-gradient(45deg,var(--blue),#3b82f6);
+  color:white;
+  text-decoration:none;
+  font-weight:600;
+  transition:.3s;
+}
+.btn-book:hover{
+  transform: translateY(-3px);
+  box-shadow:0 10px 25px rgba(0,0,0,.4);
+}
+
+/* MODAL */
+.hotel-modal{
+  display:none;
+  position:fixed;
+  z-index:10000;
+  left:0; top:0;
+  width:100%; height:100%;
+  overflow:auto;
+  background: rgba(0,0,0,0.7);
+  animation:fadeIn 0.3s ease-in-out;
+}
+.hotel-modal .modal-content{
+  background: var(--card);
+  margin:80px auto;
+  padding:20px 25px;
+  border-radius:15px;
+  width:90%;
+  max-width:600px;
+  color: var(--text);
+  max-height:80vh;
+  overflow-y:auto;
+  box-shadow:0 5px 30px rgba(0,0,0,0.4);
+  position:relative;
+}
+
+/* MODAL HEADER */
+.modal-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  border-bottom:1px solid rgba(255,255,255,0.2);
+  padding-bottom:8px;
+  margin-bottom:15px;
+}
+.modal-header h3{
+  margin:0;
+}
+.modal-header .close{
+  font-size:28px;
+  font-weight:bold;
+  cursor:pointer;
+  color: var(--gold);
+}
+
+/* SECTIONS */
+.hotel-section{
+  margin-bottom:15px;
+  line-height:1.6;
+}
+
+/* ANIMATION */
+@keyframes fadeIn{
+  from{opacity:0;}
+  to{opacity:1;}
+}
+
+/* MOBILE */
+@media(max-width:600px){
+  .page-title{font-size:26px;margin-bottom:28px;}
+  .hotel-card img{height:150px;}
+}
+</style>
+</head>
+
+<body>
+
+<header id="header">
+  <a href="index.html" class="logo"><i class="fa-solid fa-hotel"></i> Prestige Tours</a>
+</header>
+
+<!-- PAGE TITLE -->
+<div class="page-title" style="text-align:center; margin-top:90px; margin-bottom:40px;">
+  <h1 style="font-size:38px; font-weight:800; color: var(--gold); text-shadow: 1px 1px 8px rgba(0,0,0,0.5);">
+    حجز الفنادق
+  </h1>
+  <p style="font-size:16px; color: var(--muted); max-width:700px; margin:auto; line-height:1.6;">
+    اضغط على زر <span style="font-weight:700; color:var(--blue);">احجز الآن</span> للحجز مباشرة،  
+    أو لمشاهدة تفاصيل أكثر، اضغط على كارت أو صورة الفندق.
+  </p>
+</div>
+  
+
+<div class="hotels-grid">
+
+  <!-- HOTEL 1 CARD -->
+  <div class="hotel-card" onclick="openModal('modal1')">
+    <img src="images1/hotel1.jpg" alt="رينيسانس جولدن فيو">
+    <div class="hotel-content">
+      <h3>رينيسانس جولدن فيو</h3>
+      <div class="stars">
+        <i class="fas fa-star"></i>
+        <i class="fas fa-star"></i>
+        <i class="fas fa-star"></i>
+        <i class="fas fa-star"></i>
+        <i class="fas fa-star"></i>
+      </div>
+      <div class="price">السعر: 3920 جنيه/ليلة</div>
+      <div class="hotel-details short">
+        فندق 5 نجوم يقدم إطلالة مباشرة على البحر، يحتوي على مسبح خاص، سبا، وأنشطة بحرية متنوعة.
+        الهضبة, مصر, شرم الشيخ
+    </div>
+
+    <a href="https://wa.me/201556680355" target="_blank" class="btn-book" onclick="event.stopPropagation()">
+      <i class="fa-solid fa-ticket"></i> احجز الآن
+    </a>
+
+  </div>
+</div>
+
+<!-- HOTEL MODAL -->
+<div id="modal1" class="hotel-modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>رينيسانس جولدن فيو</h3>
+      <span class="close" onclick="closeModal('modal1')">&times;</span>
+    </div>
+    <div class="stars">
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+    </div>
+    <div class="price">السعر: 3920 جنيه/ليلة</div>
+    <div class="hotel-section"><b>📍 الموقع:</b><br>الهضبة - شرم الشيخ</div>
+    <div class="hotel-section"><b>⭐ المميزات:</b><br>
+      ✔ صف أول على البحر<br>
+      ✔ شاطئ سنوركلينج<br>
+      ✔ مسبح دافئ شتاءً<br>
+      ✔ كيدز كلوب<br>
+      ✔ مطاعم متنوعة<br>
+      ✔ جيم وسبا<br>
+      ✔ باركينج مجاني
+    </div>
+    <div class="hotel-section"><b>📄 وصف الفندق:</b><br>
+      فندق 5 نجوم ديلوكس يقع مباشرة على البحر، يتميز بشاطئ خاص وشعب مرجانية مناسبة للسنوركلينج،
+      ويضم 4 حمامات سباحة ومطاعم عالمية وخدمات عالية الجودة.
+    </div>
+    <div class="hotel-section"><b>👶 سياسة الأطفال:</b><br>
+      - طفل أول أقل من 12 سنة مجانا<br>
+      - طفل ثاني أقل من 6 سنوات مجانا<br>
+      - من 6 لـ 12 سنة: 1050 جنيه
+    </div>
+    <div class="hotel-section"><b>💰 أسعار الغرف:</b><br>
+      غرفة مزدوجة: 11765 جنيه<br>
+      غرفة فردية: 22260 جنيه<br>
+      غرفة ثلاثية: 10370 جنيه
+    </div>
+
+    <a href="https://wa.me/201556680355" target="_blank" class="btn-book">
+      <i class="fa-solid fa-ticket"></i> احجز الآن
+    </a>
+
+  </div>
+</div>
+  
+  <!-- باقي الفنادق -->
+<!-- HOTEL 2 CARD -->
+<div class="hotel-card" onclick="openModal('modal2')">
+  <img src="images1/hotel2.jpg" alt="شاركس باي أواسيس">
+  <div class="hotel-content">
+
+    <h3>شاركس باي أواسيس</h3>
+
+    <div class="stars">
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+    </div>
+
+    <div class="price">السعر: 1235 جنيه/ليلة</div>
+
+    <div class="hotel-details short">
+      منتجع فاخر يضم مطاعم عالمية، أنشطة ترفيهية، وموقع مميز على الشاطئ. خليج القرش, مصر, شرم الشيخ
+    </div>
+
+    <a href="https://wa.me/201556680355" target="_blank" class="btn-book" onclick="event.stopPropagation()">
+      <i class="fa-solid fa-ticket"></i> احجز الآن
+    </a>
+
+  </div>
+</div>
+
+<!-- HOTEL 2 MODAL -->
+<div id="modal2" class="hotel-modal">
+  <div class="modal-content">
+
+    <div class="modal-header">
+      <h3>شاركس باي أواسيس</h3>
+      <span class="close" onclick="closeModal('modal2')">&times;</span>
+    </div>
+
+    <div class="stars">
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+    </div>
+
+    <div class="price">السعر: 1235 جنيه/ليلة</div>
+
+    <div class="hotel-section">
+      <b>📍 الموقع:</b><br>
+      خليج القرش - شرم الشيخ
+    </div>
+
+    <div class="hotel-section">
+      <b>⭐ المميزات:</b><br>
+      ✔ صف أول على البحر<br>
+      ✔ شاطئ سنوركلينج<br>
+      ✔ حمامات سباحة متعددة<br>
+      ✔ غرف فاميلي<br>
+      ✔ أسانسيرات<br>
+      ✔ باركينج مجاني
+    </div>
+
+    <div class="hotel-section">
+      <b>📄 وصف الفندق:</b><br>
+      شاركس باي أوازيس شرم الشيخ، يقع صف أول على البحر مباشرة فى منطقة خليج القرش،
+      يتميز بشاطئ خاص (جزء رملي وجزء شعاب مرجانية للسنوركلينج)، يضم 8 ألعاب أكوا بارك (3 للكبار و5 للأطفال)،
+      و6 حمامات سباحة. معظم الغرف لها فيو مميز على البحر أو حمامات السباحة.
+      المنتجع يوفر سويتات وجونيور سويت وفاميلي سويت مجهزة بالكامل.
+    </div>
+
+    <div class="hotel-section">
+      <b>👶 سياسة الأطفال:</b><br>
+      - الطفل الأول: تحت 12 سنة مجانا<br>
+      - الطفل الثاني: تحت 6 سنوات مجانا<br>
+      - من 6 إلى 12 سنة: 50% من سعر الفرد
+    </div>
+
+    <div class="hotel-section">
+      <b>💰 أسعار الغرف:</b><br>
+      غرفة مزدوجة: 3700 جنيه<br>
+      غرفة فردية: 5920 جنيه<br>
+      غرفة ثلاثية: 3700 جنيه<br>
+      (الإقامة تشمل الإفطار والعشاء، 4 أيام / 3 ليالي)
+    </div>
+
+    <a href="https://wa.me/201556680355" target="_blank" class="btn-book">
+      <i class="fa-solid fa-ticket"></i> احجز الآن
+    </a>
+
+  </div>
+</div>
+  
+<!-- HOTEL 3 CARD -->
+<div class="hotel-card" onclick="openModal('modal3')">
+  <img src="images1/hotel3.jpg" alt="الجافي ريزورت اكوا بارك">
+  <div class="hotel-content">
+
+    <h3>الجافي ريزورت اكوا بارك</h3>
+
+    <div class="stars">
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+    </div>
+
+    <div class="price">السعر: 2725 جنيه/ليلة</div>
+
+    <div class="hotel-details short">
+      فندق قريب من المعالم السياحية، يضم شاطئ رملي وأكوا بارك كبير للأطفال والكبار. خليج نعمة, مصر, شرم الشيخ
+    </div>
+
+    <a href="https://wa.me/201556680355" target="_blank" class="btn-book" onclick="event.stopPropagation()">
+      <i class="fa-solid fa-ticket"></i> احجز الآن
+    </a>
+
+  </div>
+</div>
+
+<!-- HOTEL 3 MODAL -->
+<div id="modal3" class="hotel-modal">
+  <div class="modal-content">
+
+    <div class="modal-header">
+      <h3>الجافي ريزورت اكوا بارك</h3>
+      <span class="close" onclick="closeModal('modal3')">&times;</span>
+    </div>
+
+    <div class="stars">
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+    </div>
+
+    <div class="price">السعر: 2725 جنيه/ليلة</div>
+
+    <div class="hotel-section">
+      <b>📍 الموقع:</b><br>
+      خليج نعمة - شرم الشيخ
+    </div>
+
+    <div class="hotel-section">
+      <b>⭐ المميزات:</b><br>
+      ✔ صف أول على البحر<br>
+      ✔ شاطئ رملي مميز<br>
+      ✔ أكوا بارك كبير (ألعاب للكبار والأطفال)<br>
+      ✔ منطقة ألعاب أطفال<br>
+      ✔ حمامات سباحة متعددة، منها دافئة في الشتاء<br>
+      ✔ باكيدج شهر عسل مميز<br>
+      ✔ باركينج مجاني
+    </div>
+
+    <div class="hotel-section">
+      <b>📄 وصف الفندق:</b><br>
+      الجافي ريزورت شرم الشيخ، فندق 4 نجوم يقع على البحر مباشرة في خليج نعمة، يتميز بشاطئ رملي جميل،
+      يضم أكثر من 15 لعبة أكوا بارك للكبار والأطفال، 6 حمامات سباحة (2 مدفأة شتاءً). الغرف ستاندرد وديلوكس
+      مع كوفي تري، سويتات فاميلي وجونيور سويت مطلة على البحر أو حمام السباحة.
+      المنتجع يوفر مطاعم وبارات متعددة، جيم مجاني، وواي فاي في جميع أنحاء الفندق. فريق الانيميشن يقدم أنشطة وعروض يومية.
+    </div>
+
+    <div class="hotel-section">
+      <b>👶 سياسة الأطفال:</b><br>
+      - طفلين تحت 12 سنة مجانا في الغرف الدبل والفردية
+    </div>
+
+    <div class="hotel-section">
+      <b>💰 أسعار الغرف (أبريل - مايو 2026):</b><br>
+      <u>01-04 إلى 09-04 (إفطار + غداء + عشاء + مشروبات + سناكس / 4 أيام / 3 ليالي)</u><br>
+      غرفة مزدوجة: 8175 جنيه<br>
+      غرفة فردية: 12265 جنيه<br>
+      غرفة ثلاثية: 8100 جنيه<br><br>
+
+      <u>10-04 إلى 01-05</u><br>
+      غرفة مزدوجة: 8925 جنيه<br>
+      غرفة فردية: 13390 جنيه<br>
+      غرفة ثلاثية: 8850 جنيه<br><br>
+
+      <u>02-05 إلى 21-05</u><br>
+      غرفة مزدوجة: 8175 جنيه<br>
+      غرفة فردية: 12265 جنيه<br>
+      غرفة ثلاثية: 8100 جنيه<br><br>
+
+      <u>22-05 إلى 31-05</u><br>
+      غرفة مزدوجة: 9975 جنيه<br>
+      غرفة فردية: 14965 جنيه<br>
+      غرفة ثلاثية: 9900 جنيه
+    </div>
+
+    <a href="https://wa.me/201556680355" target="_blank" class="btn-book">
+      <i class="fa-solid fa-ticket"></i> احجز الآن
+    </a>
+
+  </div>
+</div>
+  
+
+<!-- HOTEL 4 CARD -->
+<div class="hotel-card" onclick="openModal('modal4')">
+  <img src="images1/hotel4.jpg" alt="سفير شلالات">
+  <div class="hotel-content">
+
+    <h3>سفير شلالات</h3>
+
+    <div class="stars">
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+    </div>
+
+    <div class="price">السعر: 4000 جنيه/ليلة</div>
+
+    <div class="hotel-details short">
+      فندق 5 نجوم على البحر مباشرة، يضم شاطئ رملي وشعب مرجانية، أكوا بارك، حمامات سباحة متعددة ومنطقة ألعاب للأطفال.
+      الهضبة, خليج نعمة, مصر, شرم الشيخ
+    </div>
+
+    <a href="https://wa.me/201556680355" target="_blank" class="btn-book" onclick="event.stopPropagation()">
+      <i class="fa-solid fa-ticket"></i> احجز الآن
+    </a>
+
+  </div>
+</div>
+
+<!-- HOTEL 4 MODAL -->
+<div id="modal4" class="hotel-modal">
+  <div class="modal-content">
+
+    <div class="modal-header">
+      <h3>سفير شلالات</h3>
+      <span class="close" onclick="closeModal('modal4')">&times;</span>
+    </div>
+
+    <div class="stars">
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+    </div>
+
+    <div class="price">السعر: 4000 جنيه/ليلة</div>
+
+    <div class="hotel-section">
+      <b>📍 الموقع:</b><br>
+      الهضبة، خليج نعمة، شرم الشيخ
+    </div>
+
+    <div class="hotel-section">
+      <b>⭐ المميزات:</b><br>
+      ✔ صف أول على البحر<br>
+      ✔ شاطئ رملي وشعب مرجانية<br>
+      ✔ أكوا بارك<br>
+      ✔ منطقة ألعاب أطفال + كيدز كلوب<br>
+      ✔ حمام سباحة دافئ في الشتاء<br>
+      ✔ باركينج سيارات مجاني<br>
+      ✔ واي فاي مجاني في جميع أنحاء الفندق
+    </div>
+
+    <div class="hotel-section">
+      <b>📄 وصف الفندق:</b><br>
+      فندق سفير شلالات شرم الشيخ 5 نجوم، يقع على البحر مباشرة مع شاطئ خاص (جزء رملي وجزء شعب مرجانية مناسب للسنوركلينج)،
+      يتميز بالجودة العالية والرفاهية، يضم 7 حمامات سباحة للكبار والأطفال (2 مدفأة شتاءً) وحمام للاسترخاء للكبار فقط.
+      الغرف ستاندرد وديلوكس سي فيو وبول فيو وجونيور سويت مع كوفي تريه. مطاعم متعددة، بارات، جيم مجاني، سبا بتكلفة إضافية،
+      تلفريك داخل الفندق، أنشطة وأنيميشن نهاراً وعروض مساءً.
+    </div>
+
+    <div class="hotel-section">
+      <b>👶 سياسة الأطفال:</b><br>
+      - الطفل تحت 5 سنوات: مجانا<br>
+      - الطفل من 5 إلى 12 سنة: 750 جنيه/ليلة
+    </div>
+
+    <div class="hotel-section">
+      <b>💰 أسعار الغرف (أبريل - نوفمبر 2026):</b><br>
+      <u>01-04 إلى 24-05</u><br>
+      غرفة مزدوجة: 12000 جنيه<br>
+      غرفة فردية: 19800 جنيه<br>
+      غرفة ثلاثية: 10100 جنيه<br><br>
+
+      <u>25-05 إلى 31-05</u><br>
+      غرفة مزدوجة: 17100 جنيه<br>
+      غرفة فردية: 28215 جنيه<br>
+      غرفة ثلاثية: 13400 جنيه<br><br>
+
+      <u>01-06 إلى 15-07</u><br>
+      غرفة مزدوجة: 12525 جنيه<br>
+      غرفة فردية: 20665 جنيه<br>
+      غرفة ثلاثية: 10400 جنيه<br><br>
+
+      <u>16-07 إلى 30-09</u><br>
+      غرفة مزدوجة: 14100 جنيه<br>
+      غرفة فردية: 23265 جنيه<br>
+      غرفة ثلاثية: 11400 جنيه<br><br>
+
+      <u>01-10 إلى 30-11</u><br>
+      غرفة مزدوجة: 13275 جنيه<br>
+      غرفة فردية: 21905 جنيه<br>
+      غرفة ثلاثية: 10900 جنيه
+    </div>
+
+    <a href="https://wa.me/201556680355" target="_blank" class="btn-book">
+      <i class="fa-solid fa-ticket"></i> احجز الآن
+    </a>
+
+  </div>
+</div>
+  
+<!-- FOOTER -->
+<footer style="text-align:center; padding:30px 20px; background:rgba(0,0,0,0.3); border-top:1px solid rgba(255,255,255,0.1);">
+  
+  <!-- حقوق الملكية -->
+  <p style="margin:0; color:var(--muted); font-size:15px; font-weight:500; letter-spacing:0.5px;">
+    &copy; 2026 Prestige Tours. جميع الحقوق محفوظة.
+  </p>
+
+</footer>  
+<script>
+/* TOGGLE CARD */
+function toggleCard(card){
+  card.classList.toggle("active");
+}
+
+/* OPEN/CLOSE MODAL */
+function openModal(id){
+  document.getElementById(id).style.display = "block";
+}
+function closeModal(id){
+  document.getElementById(id).style.display = "none";
+}
+
+/* CLOSE MODAL WHEN CLICK OUTSIDE */
+window.onclick = function(event){
+  const modal = document.querySelector(".hotel-modal");
+  if(event.target === modal){
+    modal.style.display = "none";
+  }
+}
+
+/* HIDE HEADER ON SCROLL */
+let lastScroll=0;
+const header=document.getElementById("header");
+
+window.addEventListener("scroll",()=>{
+  let current=window.pageYOffset;
+  if(current>lastScroll){
+    header.classList.add("hide");
+  }else{
+    header.classList.remove("hide");
+  }
+  lastScroll=current;
+});
+</script>
+
+</body>
+</html>

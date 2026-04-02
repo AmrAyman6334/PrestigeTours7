@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>حجز الفنادق - Prestige Tours</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+:root{
+  --blue:#1f6feb;
+  --gold:#f4c542;
+  --dark:#06111f;
+  --card:#0f2138;
+  --text:#fff;
+  --muted:#aaa;
+  --line:rgba(255,255,255,.08);
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Cairo', sans-serif;
+}
+
+body{
+  background: linear-gradient(180deg,#06111f,#081525,#050b14);
+  color: var(--text);
+  overflow-x: hidden;
+}
+
+/* HEADER */
+header{
+  position: fixed;
+  top:0;
+  width:100%;
+  z-index:999;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:14px 20px;
+  background: rgba(0,0,0,.6);
+  backdrop-filter: blur(14px);
+  transition:0.4s;
+}
+header.hide{
+  transform: translateY(-100%);
+}
+
+/* LOGO */
+.logo{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-weight:900;
+  font-size:18px;
+  color: var(--gold);
+  cursor:pointer;
+  text-decoration: none;
+}
+.logo i{color: var(--blue);}
+
+/* PAGE TITLE */
+.page-title{
+  margin-top:90px;
+  text-align:center;
+  font-size:32px;
+  font-weight:700;
+  margin-bottom:40px;
+  color: var(--gold);
+}
+
+/* HOTELS GRID */
+.hotels-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:24px;
+  max-width:1160px;
+  margin:auto;
+  padding:0 20px 60px;
+}
+
+/* HOTEL CARD */
+.hotel-card{
+  background: var(--card);
+  border-radius:20px;
+  overflow:hidden;
+  box-shadow:0 20px 50px rgba(0,0,0,.5);
+  transition:.3s;
+  cursor:pointer;
+}
+.hotel-card:hover{
+  transform:translateY(-6px);
+}
+.hotel-card img{
+  width:100%;
+  height:180px;
+  object-fit:cover;
+}
+.hotel-content{
+  padding:18px;
+}
+.hotel-content h3{
+  font-size:20px;
+  margin-bottom:8px;
+}
+.stars{
+  color: var(--gold);
+  margin-bottom:8px;
+}
+.hotel-content .price{
+  font-size:16px;
+  font-weight:700;
+  margin-bottom:14px;
+  color: var(--blue);
+}
+.hotel-details{
+  font-size:13px;
+  color:var(--muted);
+  line-height:1.8;
+  margin-bottom:10px;
+}
+.btn-book{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  padding:12px 18px;
+  border-radius:24px;
+  background: linear-gradient(45deg,var(--blue),#3b82f6);
+  color:white;
+  text-decoration:none;
+  font-weight:600;
+  transition:.3s;
+}
+.btn-book:hover{
+  transform: translateY(-3px);
+  box-shadow:0 10px 25px rgba(0,0,0,.4);
+}
+
+/* MODAL */
+.hotel-modal{
+  display:none;
+  position:fixed;
+  z-index:10000;
+  left:0; top:0;
+  width:100%; height:100%;
+  overflow:auto;
+  background: rgba(0,0,0,0.7);
+  animation:fadeIn 0.3s ease-in-out;
+}
+.hotel-modal .modal-content{
+  background: var(--card);
+  margin:80px auto;
+  padding:20px 25px;
+  border-radius:15px;
+  width:90%;
+  max-width:600px;
+  color: var(--text);
+  max-height:80vh;
+  overflow-y:auto;
+  box-shadow:0 5px 30px rgba(0,0,0,0.4);
+  position:relative;
+}
+
+/* MODAL HEADER */
+.modal-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  border-bottom:1px solid rgba(255,255,255,0.2);
+  padding-bottom:8px;
+  margin-bottom:15px;
+}
+.modal-header h3{
+  margin:0;
+}
+.modal-header .close{
+  font-size:28px;
+  font-weight:bold;
+  cursor:pointer;
+  color: var(--gold);
+}
+
+/* SECTIONS */
+.hotel-section{
+  margin-bottom:15px;
+  line-height:1.6;
+}
+
+/* ANIMATION */
+@keyframes fadeIn{
+  from{opacity:0;}
+  to{opacity:1;}
+}
+
+/* MOBILE */
+@media(max-width:600px){
+  .page-title{font-size:26px;margin-bottom:28px;}
+  .hotel-card img{height:150px;}
+}
+</style>
+</head>
+
+<body>
+
+<header id="header">
+  <a href="index.html" class="logo"><i class="fa-solid fa-hotel"></i> Prestige Tours</a>
+</header>
+
+<!-- PAGE TITLE -->
+<div class="page-title" style="text-align:center; margin-top:90px; margin-bottom:40px;">
+  <h1 style="font-size:38px; font-weight:800; color: var(--gold); text-shadow: 1px 1px 8px rgba(0,0,0,0.5);">
+    حجز الفنادق
+  </h1>
+  <p style="font-size:16px; color: var(--muted); max-width:700px; margin:auto; line-height:1.6;">
+    اضغط على زر <span style="font-weight:700; color:var(--blue);">احجز الآن</span> للحجز مباشرة،  
+    أو لمشاهدة تفاصيل أكثر، اضغط على كارت أو صورة الفندق.
+  </p>
+</div>
+
+<div class="hotels-grid">
+
+<!-- HOTEL 10 CARD -->
+<div class="hotel-card" onclick="openModal('modal10')">
+  <img src="images3/hotel1.jpg" alt="تيدا سويس إن العين السخنة">
+  <div class="hotel-content">
+
+    <h3>تيدا سويس إن العين السخنة</h3>
+
+    <div class="stars">
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+    </div>
+
+    <div class="price">السعر: 1350 جنيه/ليلة</div>
+
+    <div class="hotel-details short">
+      فندق 4 نجوم ديلوكس في العين السخنة، مع شاطئ رملي، أكوا بارك، ألعاب أطفال، غرف فاميلي، واي فاي مجاني، وأسانسيرات.
+    </div>
+
+    <a href="https://wa.me/201556680355" target="_blank" class="btn-book" onclick="event.stopPropagation()">
+      <i class="fa-solid fa-ticket"></i> احجز الآن
+    </a>
+
+  </div>
+</div>
+
+<!-- HOTEL 10 MODAL -->
+<div id="modal10" class="hotel-modal">
+  <div class="modal-content">
+
+    <div class="modal-header">
+      <h3>تيدا سويس إن العين السخنة</h3>
+      <span class="close" onclick="closeModal('modal10')">&times;</span>
+    </div>
+
+    <div class="stars">
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+    </div>
+
+    <div class="price">السعر: 1350 جنيه/ليلة</div>
+
+    <div class="hotel-section">
+      <b>📍 الموقع:</b><br>
+      العين السخنة، مصر
+    </div>
+
+    <div class="hotel-section">
+      <b>⭐ المميزات:</b><br>
+      ✔ شاطئ رملي مباشر<br>
+      ✔ أكوا بارك: 3 ألعاب للكبار وأكثر من 5 للأطفال<br>
+      ✔ 4 حمامات سباحة، أحدها مدفأ في الشتاء<br>
+      ✔ 3 مطاعم: رئيسي + إيطالي + لبناني<br>
+      ✔ بار اللوبي يقدم مشروبات وعصائر طوال اليوم<br>
+      ✔ غرف فاميلي وسويتات مع جاكوزي وسونا<br>
+      ✔ مياه، شاي، نسكافيه، ميني بار وخزنة في جميع الغرف<br>
+      ✔ مصعدين للوصول للأدوار العليا<br>
+      ✔ قاعة مؤتمرات<br>
+      ✔ أول وأكبر مدينة ملاهي بالعين السخنة: حديقة ديناصورات، عالم السيارات (Go Kart)، سينما 5D، عالم الحلوى<br>
+      ✔ نادي أطفال ومنطقة ألعاب، مسرح، أنشطة نهارية وعروض مسائية<br>
+      ✔ شاتل باص مجاني للشاطئ<br>
+      ✔ واي فاي مجاني، جيم، ساونا، جاكوزي، مساج، وكارت 1000 نقطة مجاني يومياً للألعاب
+    </div>
+
+    <div class="hotel-section">
+      <b>👶 سياسة الأطفال:</b><br>
+      - الطفل تحت 3 سنوات: مجاناً<br>
+      - الطفل 3-5.99 سنوات: 450 جنيه في الليلة<br>
+      - الطفل 6-11.99 سنة: 550 جنيه في الليلة
+    </div>
+
+    <div class="hotel-section">
+      <b>💰 أسعار الفترات المتاحة:</b><br>
+      <u>25-02 إلى 17-03</u><br>
+      مزدوجة: 2700 جنيه<br>
+      فردية: 4485 جنيه<br>
+      ثلاثية: 2838 جنيه<br><br>
+
+      <u>18-03 إلى 19-03</u><br>
+      مزدوجة: 5335 جنيه<br>
+      فردية: 9750 جنيه<br>
+      ثلاثية: 4621 جنيه<br><br>
+
+      <u>20-03 إلى 22-03</u><br>
+      مزدوجة: 6305 جنيه<br>
+      فردية: 11700 جنيه<br>
+      ثلاثية: 5281 جنيه<br><br>
+
+      <u>23-03 إلى 07-04</u><br>
+      مزدوجة: 2700 جنيه<br>
+      فردية: 4485 جنيه<br>
+      ثلاثية: 2840 جنيه<br><br>
+
+      <u>08-04 إلى 10-04</u><br>
+      مزدوجة: 5335 جنيه<br>
+      فردية: 9750 جنيه<br>
+      ثلاثية: 4620 جنيه<br><br>
+
+      <u>11-04 إلى 13-04</u><br>
+      مزدوجة: 4850 جنيه<br>
+      فردية: 8775 جنيه<br>
+      ثلاثية: 4290 جنيه
+    </div>
+
+    <a href="https://wa.me/201556680355" target="_blank" class="btn-book">
+      <i class="fa-solid fa-ticket"></i> احجز الآن
+    </a>
+
+  </div>
+</div>
+  
+
+  <!-- باقي الفنادق -->
+<!-- HOTEL 11 CARD -->
+<div class="hotel-card" onclick="openModal('modal11')">
+  <img src="images3/hotel2.jpg" alt="توليب الجلالة ماجيستيك العين السخنة">
+  <div class="hotel-content">
+
+    <h3>توليب الجلالة ماجيستيك</h3>
+
+    <div class="stars">
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+    </div>
+
+    <div class="price">السعر: 2550 جنيه/ليلة</div>
+
+    <div class="hotel-details short">
+      فندق 5 نجوم ديلوكس على البحر مباشرة في العين السخنة، مع شاطئ رملي، حمام سباحة داخلي، فيلات وشاليهات، واي فاي مجاني، وأسانسيرات.
+    </div>
+
+    <a href="https://wa.me/201556680355" target="_blank" class="btn-book" onclick="event.stopPropagation()">
+      <i class="fa-solid fa-ticket"></i> احجز الآن
+    </a>
+
+  </div>
+</div>
+
+<!-- HOTEL 11 MODAL -->
+<div id="modal11" class="hotel-modal">
+  <div class="modal-content">
+
+    <div class="modal-header">
+      <h3>توليب الجلالة ماجيستيك العين السخنة</h3>
+      <span class="close" onclick="closeModal('modal11')">&times;</span>
+    </div>
+
+    <div class="stars">
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+    </div>
+
+    <div class="price">السعر: 2550 جنيه/ليلة</div>
+
+    <div class="hotel-section">
+      <b>📍 الموقع:</b><br>
+      العين السخنة، مصر
+    </div>
+
+    <div class="hotel-section">
+      <b>⭐ المميزات:</b><br>
+      ✔ صف أول على البحر وشاطئ رملي<br>
+      ✔ حمام سباحة داخلي وغرف فخمة تطل على الجبل أو البحر<br>
+      ✔ فيلات وشاليهات مع مطبخ مجهز بالكامل<br>
+      ✔ 3 مطاعم متنوعة<br>
+      ✔ مركز سبا وجيم، ملعب خماسي، تنس طاولة وبلياردو<br>
+      ✔ عيادة، صيدلية، سوق صغير، غرفة ألعاب، قاعات اجتماعات<br>
+      ✔ واي فاي مجاني، فريق انيميشان للأنشطة والعروض والحفلات
+    </div>
+
+    <div class="hotel-section">
+      <b>👶 سياسة الأطفال:</b><br>
+      - الطفل الأول تحت 6 سنوات: مجاناً<br>
+      - الطفل من 6 إلى 12 سنة: 550 جنيه في الليلة
+    </div>
+
+    <div class="hotel-section">
+      <b>💰 أسعار الفترات المتاحة:</b><br>
+      <u>09-03 إلى 18-03</u><br>
+      مزدوجة: 5105 / 6100 جنيه<br>
+      فردية: 9355 / 11355 جنيه<br>
+      ثلاثية: 4325 / 5025 جنيه<br><br>
+
+      <u>19-03 إلى 23-03</u><br>
+      مزدوجة: 9660 جنيه<br>
+      فردية: 19010 جنيه<br>
+      ثلاثية: 8070 جنيه<br><br>
+
+      <u>24-03 إلى 08-04</u><br>
+      مزدوجة: 4750 جنيه<br>
+      فردية: 8640 جنيه<br>
+      ثلاثية: 4365 جنيه<br><br>
+
+      <u>09-04 إلى 13-04</u><br>
+      مزدوجة: 9660 جنيه<br>
+      فردية: 19010 جنيه<br>
+      ثلاثية: 8070 جنيه<br><br>
+
+      <u>14-04 إلى 26-05</u><br>
+      مزدوجة: 5265 / 6260 جنيه<br>
+      فردية: 9665 / 11675 جنيه<br>
+      ثلاثية: 4775 / 5375 جنيه<br><br>
+
+      <u>27-05 إلى 31-05</u><br>
+      مزدوجة: 9660 جنيه<br>
+      فردية: 19010 جنيه<br>
+      ثلاثية: 8070 جنيه
+    </div>
+
+    <a href="https://wa.me/201556680355" target="_blank" class="btn-book">
+      <i class="fa-solid fa-ticket"></i> احجز الآن
+    </a>
+
+  </div>
+</div>
+  
+<!-- HOTEL 12 CARD -->
+<div class="hotel-card" onclick="openModal('modal12')">
+  <img src="images3/hotel3.jpg" alt="كورال سي بيتش أكوا بارك العين السخنة">
+  <div class="hotel-content">
+
+    <h3>كورال سي بيتش أكوا بارك</h3>
+
+    <div class="stars">
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+    </div>
+
+    <div class="price">السعر: 2880 جنيه/ليلة</div>
+
+    <div class="hotel-details short">
+      فندق 4 نجوم ديلوكس على البحر مباشرة في العين السخنة، مع أكوا بارك كبيرة، حمامات سباحة متعددة، كيدز كلوب، واي فاي، وأسانسيرات.
+    </div>
+
+    <a href="https://wa.me/201556680355" target="_blank" class="btn-book" onclick="event.stopPropagation()">
+      <i class="fa-solid fa-ticket"></i> احجز الآن
+    </a>
+
+  </div>
+</div>
+
+<!-- HOTEL 12 MODAL -->
+<div id="modal12" class="hotel-modal">
+  <div class="modal-content">
+
+    <div class="modal-header">
+      <h3>كورال سي بيتش أكوا بارك العين السخنة</h3>
+      <span class="close" onclick="closeModal('modal12')">&times;</span>
+    </div>
+
+    <div class="stars">
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+    </div>
+
+    <div class="price">السعر: 2880 جنيه/ليلة</div>
+
+    <div class="hotel-section">
+      <b>📍 الموقع:</b><br>
+      العين السخنة، مصر
+    </div>
+
+    <div class="hotel-section">
+      <b>⭐ المميزات:</b><br>
+      ✔ صف أول على البحر وشاطئ رملي<br>
+      ✔ 9 ألعاب أكوا بارك متنوعة للكبار والأطفال<br>
+      ✔ 4 حمامات سباحة بما فيها حمام داخلي مدفأ<br>
+      ✔ غرف تطل على حمام السباحة أو البحر جزئياً<br>
+      ✔ كاتل، مياه، شاي، نسكافيه يومياً<br>
+      ✔ واي فاي متاح بتكلفة إضافية<br>
+      ✔ مطعم رئيسي ممتاز<br>
+      ✔ أنشطة، كيدز كلوب، ملاعب بلياردو، تنس طاولة، بيبي فوت، هوكي، كرة قدم وسلة، جيم مجاني<br>
+      ✔ فريق انيميشان يقدم الألعاب والعروض والحفلات يومياً
+    </div>
+
+    <div class="hotel-section">
+      <b>👶 سياسة الأطفال:</b><br>
+      - الطفل تحت 6 سنوات: مجاناً<br>
+      - الطفل بين 6 و12 سنة: 50% من سعر الفرد
+    </div>
+
+    <div class="hotel-section">
+      <b>💰 أسعار الفترات المتاحة:</b><br>
+      <u>22-01 إلى 06-02</u><br>
+      مزدوجة: 5760<br>
+      فردية: 9215<br>
+      ثلاثية: 5490<br><br>
+
+      <u>07-02 إلى 17-02</u><br>
+      مزدوجة: 4320 / 5280<br>
+      فردية: 6910 / 8450<br>
+      ثلاثية: 4020 / 5000<br><br>
+
+      <u>18-02 إلى 19-03</u><br>
+      مزدوجة: 3360<br>
+      فردية: 5375<br>
+      ثلاثية: 3040<br><br>
+
+      <u>24-03 إلى 08-04</u><br>
+      مزدوجة: 4320 / 5280<br>
+      فردية: 6910 / 8450<br>
+      ثلاثية: 4020 / 5000<br><br>
+
+      <u>14-04 إلى 29-04</u><br>
+      مزدوجة: 4320 / 5280<br>
+      فردية: 6910 / 8450<br>
+      ثلاثية: 4020 / 5000
+    </div>
+
+    <a href="https://wa.me/201556680355" target="_blank" class="btn-book">
+      <i class="fa-solid fa-ticket"></i> احجز الآن
+    </a>
+
+  </div>
+</div>
+
+<!-- HOTEL 13 CARD -->
+<div class="hotel-card" onclick="openModal('modal13')">
+  <img src="images3/hotel4.jpg" alt="امباير بيتش أكوا بارك الغردقة">
+  <div class="hotel-content">
+
+    <h3>امباير بيتش أكوا بارك</h3>
+
+    <div class="stars">
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+    </div>
+
+    <div class="price">السعر: 1840 جنيه/ليلة</div>
+
+    <div class="hotel-details short">
+      فندق 4 نجوم على البحر مباشرة في الغردقة، مع أكوا بارك، حمامات سباحة متعددة، كيدز كلوب، واي فاي، وغرف واسعة مكيفة.
+    </div>
+
+    <a href="https://wa.me/201556680355" target="_blank" class="btn-book" onclick="event.stopPropagation()">
+      <i class="fa-solid fa-ticket"></i> احجز الآن
+    </a>
+
+  </div>
+</div>
+
+<!-- HOTEL 13 MODAL -->
+<div id="modal13" class="hotel-modal">
+  <div class="modal-content">
+
+    <div class="modal-header">
+      <h3>امباير بيتش أكوا بارك الغردقة</h3>
+      <span class="close" onclick="closeModal('modal13')">&times;</span>
+    </div>
+
+    <div class="stars">
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+    </div>
+
+    <div class="price">السعر: 1840 جنيه/ليلة</div>
+
+    <div class="hotel-section">
+      <b>📍 الموقع:</b><br>
+      الدهار، الغردقة، مصر
+    </div>
+
+    <div class="hotel-section">
+      <b>⭐ المميزات:</b><br>
+      ✔ صف أول على البحر وشاطئ رملي<br>
+      ✔ 3 حمامات سباحة منهم حمام مدفأ وحمام مطل على البحر<br>
+      ✔ أكوا بارك للكبار والأطفال<br>
+      ✔ مطعم رئيسي indoor و outdoor، وبار على الشاطئ<br>
+      ✔ غرف واسعة مكيفة مع شاشة وميني بار وخزنة<br>
+      ✔ غرف كونيكتيد للعائلات<br>
+      ✔ كيدز اريا وفريق انيميشن وأنشطة ترفيهية
+    </div>
+
+    <div class="hotel-section">
+      <b>👶 سياسة الأطفال:</b><br>
+      - الطفل الأول تحت 12 سنة: مجاناً<br>
+      - الطفل الثاني تحت 6 سنوات: مجاناً<br>
+      - الطفل الثاني من 6 إلى 12 سنة: 50% من سعر الفرد
+    </div>
+
+    <div class="hotel-section">
+      <b>💰 أسعار الفترات المتاحة:</b><br>
+      <u>24-02 إلى 18-03</u><br>
+      مزدوجة: 5515<br>
+      فردية: 8270<br>
+      ثلاثية: 5430<br><br>
+
+      <u>19-03 إلى 25-03</u><br>
+      مزدوجة: 5645<br>
+      فردية: 8464<br>
+      ثلاثية: 5560<br><br>
+
+      <u>26-03 إلى 09-04</u><br>
+      مزدوجة: 5515<br>
+      فردية: 8270<br>
+      ثلاثية: 5430<br><br>
+
+      <u>10-04 إلى 13-04</u><br>
+      مزدوجة: 6450<br>
+      فردية: 9675<br>
+      ثلاثية: 6375<br><br>
+
+      <u>14-04 إلى 30-04</u><br>
+      مزدوجة: 5805<br>
+      فردية: 8710<br>
+      ثلاثية: 5725
+    </div>
+
+    <a href="https://wa.me/201556680355" target="_blank" class="btn-book">
+      <i class="fa-solid fa-ticket"></i> احجز الآن
+    </a>
+
+  </div>
+</div>
+  
+<!-- HOTEL 14 CARD -->
+<div class="hotel-card" onclick="openModal('modal14')">
+  <img src="images3/hotel5.jpg" alt="توليب الجلالة هيلز العين السخنة">
+  <div class="hotel-content">
+
+    <h3>توليب الجلالة هيلز</h3>
+
+    <div class="stars">
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+    </div>
+
+    <div class="price">السعر: 1550 جنيه/ليلة</div>
+
+    <div class="hotel-details short">
+      فندق 5 نجوم ديلوكس على البحر مع شاطئ خاص، أكوا بارك للأطفال، حمامات سباحة متعددة، كيدز كلوب، واي فاي مجاني، وغرف واسعة وسويتات فاخرة.
+    </div>
+
+    <a href="https://wa.me/201556680355" target="_blank" class="btn-book" onclick="event.stopPropagation()">
+      <i class="fa-solid fa-ticket"></i> احجز الآن
+    </a>
+
+  </div>
+</div>
+
+<!-- HOTEL 14 MODAL -->
+<div id="modal14" class="hotel-modal">
+  <div class="modal-content">
+
+    <div class="modal-header">
+      <h3>توليب الجلالة هيلز العين السخنة</h3>
+      <span class="close" onclick="closeModal('modal14')">&times;</span>
+    </div>
+
+    <div class="stars">
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+      <i class="fas fa-star"></i>
+    </div>
+
+    <div class="price">السعر: 1550 جنيه/ليلة</div>
+
+    <div class="hotel-section">
+      <b>📍 الموقع:</b><br>
+      العين السخنة، مصر
+    </div>
+
+    <div class="hotel-section">
+      <b>⭐ المميزات:</b><br>
+      ✔ شاطئ خاص مع شاتل باص للوصول<br>
+      ✔ 4 حمامات سباحة منها داخلي مدفأ<br>
+      ✔ أكوا بارك للأطفال<br>
+      ✔ غرف سوبيريور وبريميام مع إطلالات بانورامية على البحر<br>
+      ✔ سويتات فاخرة واسعة<br>
+      ✔ كاتل، مياه، شاي، نسكافيه يومياً<br>
+      ✔ منطقة ألعاب أطفال بها شلال وترامبولين<br>
+      ✔ بلياردو، تنس طاولة، هوكي، بيبي فوت، كرة سلة، ملعب كرة قدم، جيم مجاني<br>
+      ✔ مركز سبا وملعب تنس<br>
+      ✔ فريق انيميشان يقدم أنشطة وعروض متنوعة
+    </div>
+
+    <div class="hotel-section">
+      <b>👶 سياسة الأطفال:</b><br>
+      - الطفل تحت 6 سنوات: مجاناً<br>
+      - الطفل بين 6 و12 سنة: 550 جنيه في الليلة
+    </div>
+
+    <div class="hotel-section">
+      <b>💰 أسعار الفترات المتاحة:</b><br>
+      <u>25-02 إلى 18-03</u><br>
+      مزدوجة: 3100<br>
+      فردية: 5360<br>
+      ثلاثية: 3126<br><br>
+
+      <u>19-03 إلى 23-03</u><br>
+      مزدوجة: 8995<br>
+      فردية: 17220<br>
+      ثلاثية: 7570<br><br>
+
+      <u>24-03 إلى 08-04</u><br>
+      مزدوجة: 4300 / 5300<br>
+      فردية: 7750 / 9844<br>
+      ثلاثية: 3995 / 4695<br><br>
+
+      <u>09-04 إلى 13-04</u><br>
+      مزدوجة: 6550<br>
+      فردية: 12300<br>
+      ثلاثية: 5950<br><br>
+
+      <u>14-04 إلى 26-05</u><br>
+      مزدوجة: 5100<br>
+      فردية: 9349<br>
+      ثلاثية: 4535
+    </div>
+
+    <a href="https://wa.me/201556680355" target="_blank" class="btn-book">
+      <i class="fa-solid fa-ticket"></i> احجز الآن
+    </a>
+
+  </div>
+</div>
+  
+<!-- FOOTER -->
+<footer style="text-align:center; padding:30px 20px; background:rgba(0,0,0,0.3); border-top:1px solid rgba(255,255,255,0.1);">
+  
+  <!-- حقوق الملكية -->
+  <p style="margin:0; color:var(--muted); font-size:15px; font-weight:500; letter-spacing:0.5px;">
+    &copy; 2026 Prestige Tours. جميع الحقوق محفوظة.
+  </p>
+
+</footer>
+  
+<script>
+/* TOGGLE CARD */
+function toggleCard(card){
+  card.classList.toggle("active");
+}
+
+/* OPEN/CLOSE MODAL */
+function openModal(id){
+  document.getElementById(id).style.display = "block";
+}
+function closeModal(id){
+  document.getElementById(id).style.display = "none";
+}
+
+/* CLOSE MODAL WHEN CLICK OUTSIDE */
+window.onclick = function(event){
+  const modal = document.querySelector(".hotel-modal");
+  if(event.target === modal){
+    modal.style.display = "none";
+  }
+}
+
+/* HIDE HEADER ON SCROLL */
+let lastScroll=0;
+const header=document.getElementById("header");
+
+window.addEventListener("scroll",()=>{
+  let current=window.pageYOffset;
+  if(current>lastScroll){
+    header.classList.add("hide");
+  }else{
+    header.classList.remove("hide");
+  }
+  lastScroll=current;
+});
+</script>
+
+</body>
+</html>
